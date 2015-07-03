@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ryu.app.ofctl &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="../index.html" />
+    <link rel="up" title="Built-in Ryu applications" href="../app.html" />
+    <link rel="next" title="ryu.app.ofctl_rest" href="ofctl_rest.html" />
+    <link rel="prev" title="Built-in Ryu applications" href="../app.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>ryu.app.ofctl</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="../app.html">Built-in Ryu applications</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ofctl_rest.html">ryu.app.ofctl_rest</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="ryu-app-ofctl">
+<h1>ryu.app.ofctl<a class="headerlink" href="#ryu-app-ofctl" title="Permalink to this headline">¶</a></h1>
+<p>ryu.app.ofctl provides a convenient way to use OpenFlow messages
+synchronously.</p>
+<p>OfctlService ryu application is automatically loaded if your
+Ryu application imports ofctl.api module.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ryu.app.ofctl.api</span>
+</pre></div>
+</div>
+<p>OfctlService application internally uses OpenFlow barrier messages
+to ensure message boundaries.  As OpenFlow messages are asynchronous
+and some of messages does not have any replies on success, barriers
+are necessary for correct error handling.</p>
+<div class="section" id="module-ryu.app.ofctl.api">
+<span id="api-module"></span><h2>api module<a class="headerlink" href="#module-ryu.app.ofctl.api" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ryu.app.ofctl.api.get_datapath">
+<code class="descclassname">ryu.app.ofctl.api.</code><code class="descname">get_datapath</code><span class="sig-paren">(</span><em>app</em>, <em>dpid</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.app.ofctl.api.get_datapath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get datapath object by dpid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>app</strong> &#8211; Client RyuApp instance</li>
+<li><strong>dpid</strong> &#8211; Datapath-id (in integer)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns None on error.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ryu.app.ofctl.api.send_msg">
+<code class="descclassname">ryu.app.ofctl.api.</code><code class="descname">send_msg</code><span class="sig-paren">(</span><em>app</em>, <em>msg</em>, <em>reply_cls=None</em>, <em>reply_multi=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.app.ofctl.api.send_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send an OpenFlow message and wait for reply messages.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>app</strong> &#8211; Client RyuApp instance</li>
+<li><strong>msg</strong> &#8211; An OpenFlow controller-to-switch message to send</li>
+<li><strong>reply_cls</strong> &#8211; OpenFlow message class for expected replies.
+None means no replies are expected.  The default is None.</li>
+<li><strong>reply_multi</strong> &#8211; True if multipart replies are expected.
+The default is False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If no replies, returns None.
+If reply_multi=False, returns OpenFlow switch-to-controller message.
+If reply_multi=True, returns a list of OpenFlow switch-to-controller
+messages.</p>
+<p>Raise an exception on error.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ryu.app.ofctl.api</span> <span class="kn">as</span> <span class="nn">api</span>
+
+<span class="n">msg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">OFPPortDescStatsRequest</span><span class="p">(</span><span class="n">datapath</span><span class="o">=</span><span class="n">datapath</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">send_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span>
+                            <span class="n">reply_cls</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">OFPPortDescStatsReply</span><span class="p">,</span>
+                            <span class="n">reply_multi</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ryu.app.ofctl.exception">
+<span id="exceptions"></span><h2>exceptions<a class="headerlink" href="#module-ryu.app.ofctl.exception" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="ryu.app.ofctl.exception.OFError">
+<em class="property">exception </em><code class="descclassname">ryu.app.ofctl.exception.</code><code class="descname">OFError</code><span class="sig-paren">(</span><em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.app.ofctl.exception.OFError" title="Permalink to this definition">¶</a></dt>
+<dd><p>OFPErrorMsg is received.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ryu.app.ofctl.exception.UnexpectedMultiReply">
+<em class="property">exception </em><code class="descclassname">ryu.app.ofctl.exception.</code><code class="descname">UnexpectedMultiReply</code><span class="sig-paren">(</span><em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.app.ofctl.exception.UnexpectedMultiReply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two or more replies are received for reply_muiti=False request.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="../app.html">Built-in Ryu applications</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ofctl_rest.html">ryu.app.ofctl_rest</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

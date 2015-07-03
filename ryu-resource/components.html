@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Components of Ryu &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="index.html" />
+    <link rel="up" title="Writing Your Ryu Application" href="developing.html" />
+    <link rel="next" title="Ryu application API" href="ryu_app_api.html" />
+    <link rel="prev" title="The First Application" href="writing_ryu_app.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>Components of Ryu</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="writing_ryu_app.html">The First Application</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ryu_app_api.html">Ryu application API</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="components-of-ryu">
+<h1>Components of Ryu<a class="headerlink" href="#components-of-ryu" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="executables">
+<h2>Executables<a class="headerlink" href="#executables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bin-ryu-manager">
+<h3>bin/ryu-manager<a class="headerlink" href="#bin-ryu-manager" title="Permalink to this headline">¶</a></h3>
+<p>The main executable.</p>
+</div>
+</div>
+<div class="section" id="base-components">
+<h2>Base components<a class="headerlink" href="#base-components" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ryu.base.app_manager">
+<span id="ryu-base-app-manager"></span><h3>ryu.base.app_manager<a class="headerlink" href="#module-ryu.base.app_manager" title="Permalink to this headline">¶</a></h3>
+<p>The central management of Ryu applications.</p>
+<ul class="simple">
+<li>Load Ryu applications</li>
+<li>Provide <cite>contexts</cite> to Ryu applications</li>
+<li>Route messages among Ryu applications</li>
+</ul>
+</div>
+</div>
+<div class="section" id="openflow-controller">
+<h2>OpenFlow controller<a class="headerlink" href="#openflow-controller" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ryu.controller.controller">
+<span id="ryu-controller-controller"></span><h3>ryu.controller.controller<a class="headerlink" href="#module-ryu.controller.controller" title="Permalink to this headline">¶</a></h3>
+<p>The main component of OpenFlow controller.</p>
+<ul class="simple">
+<li>Handle connections from switches</li>
+<li>Generate and route events to appropriate entities like Ryu applications</li>
+</ul>
+</div>
+<div class="section" id="module-ryu.controller.dpset">
+<span id="ryu-controller-dpset"></span><h3>ryu.controller.dpset<a class="headerlink" href="#module-ryu.controller.dpset" title="Permalink to this headline">¶</a></h3>
+<p>Manage switches.</p>
+<p>Planned to be replaced by ryu/topology.</p>
+</div>
+<div class="section" id="module-ryu.controller.ofp_event">
+<span id="ryu-controller-ofp-event"></span><h3>ryu.controller.ofp_event<a class="headerlink" href="#module-ryu.controller.ofp_event" title="Permalink to this headline">¶</a></h3>
+<p>OpenFlow event definitions.</p>
+</div>
+<div class="section" id="module-ryu.controller.ofp_handler">
+<span id="ryu-controller-ofp-handler"></span><h3>ryu.controller.ofp_handler<a class="headerlink" href="#module-ryu.controller.ofp_handler" title="Permalink to this headline">¶</a></h3>
+<p>Basic OpenFlow handling including negotiation.</p>
+</div>
+</div>
+<div class="section" id="openflow-wire-protocol-encoder-and-decoder">
+<h2>OpenFlow wire protocol encoder and decoder<a class="headerlink" href="#openflow-wire-protocol-encoder-and-decoder" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ryu.ofproto.ofproto_v1_0">
+<span id="ryu-ofproto-ofproto-v1-0"></span><h3>ryu.ofproto.ofproto_v1_0<a class="headerlink" href="#module-ryu.ofproto.ofproto_v1_0" title="Permalink to this headline">¶</a></h3>
+<p>OpenFlow 1.0 definitions.</p>
+</div>
+<div class="section" id="module-ryu.ofproto.ofproto_v1_0_parser">
+<span id="ryu-ofproto-ofproto-v1-0-parser"></span><h3>ryu.ofproto.ofproto_v1_0_parser<a class="headerlink" href="#module-ryu.ofproto.ofproto_v1_0_parser" title="Permalink to this headline">¶</a></h3>
+<p>Decoder/Encoder implementations of OpenFlow 1.0.</p>
+</div>
+<div class="section" id="module-ryu.ofproto.ofproto_v1_2">
+<span id="ryu-ofproto-ofproto-v1-2"></span><h3>ryu.ofproto.ofproto_v1_2<a class="headerlink" href="#module-ryu.ofproto.ofproto_v1_2" title="Permalink to this headline">¶</a></h3>
+<p>OpenFlow 1.2 definitions.</p>
+</div>
+<div class="section" id="module-ryu.ofproto.ofproto_v1_2_parser">
+<span id="ryu-ofproto-ofproto-v1-2-parser"></span><h3>ryu.ofproto.ofproto_v1_2_parser<a class="headerlink" href="#module-ryu.ofproto.ofproto_v1_2_parser" title="Permalink to this headline">¶</a></h3>
+<p>Decoder/Encoder implementations of OpenFlow 1.2.</p>
+</div>
+<div class="section" id="module-ryu.ofproto.ofproto_v1_3">
+<span id="ryu-ofproto-ofproto-v1-3"></span><h3>ryu.ofproto.ofproto_v1_3<a class="headerlink" href="#module-ryu.ofproto.ofproto_v1_3" title="Permalink to this headline">¶</a></h3>
+<p>OpenFlow 1.3 definitions.</p>
+</div>
+<div class="section" id="module-ryu.ofproto.ofproto_v1_3_parser">
+<span id="ryu-ofproto-ofproto-v1-3-parser"></span><h3>ryu.ofproto.ofproto_v1_3_parser<a class="headerlink" href="#module-ryu.ofproto.ofproto_v1_3_parser" title="Permalink to this headline">¶</a></h3>
+<p>This module implements OpenFlow 1.3.x.</p>
+<p>This module also implements some of extensions shown in
+&#8220;OpenFlow Extensions for 1.3.X Pack 1&#8221;.
+Namely, the following extensions are implemented.</p>
+<blockquote>
+<div><ul class="simple">
+<li>EXT-236 Bad flow entry priority error Extension</li>
+<li>EXT-237 Set async config error Extension</li>
+<li>EXT-256 PBB UCA header field Extension</li>
+<li>EXT-260 Duplicate instruction error Extension</li>
+<li>EXT-264 Multipart timeout errors Extension</li>
+</ul>
+</div></blockquote>
+<p>The following extensions are partially implemented.</p>
+<blockquote>
+<div><ul class="simple">
+<li>EXT-187 Flow entry notifications Extension (ONFMP_FLOW_MONITOR only)</li>
+<li>EXT-230 Bundle Extension (Error codes only)</li>
+<li>EXT-232 Table synchronisation Extension (Error codes only)</li>
+</ul>
+</div></blockquote>
+<p>The following extensions are not implemented yet.</p>
+<blockquote>
+<div><ul class="simple">
+<li>EXT-191 Role Status Extension</li>
+<li>EXT-192-e Flow entry eviction Extension</li>
+<li>EXT-192-v Vacancy events Extension</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="module-ryu.ofproto.ofproto_v1_4">
+<span id="ryu-ofproto-ofproto-v1-4"></span><h3>ryu.ofproto.ofproto_v1_4<a class="headerlink" href="#module-ryu.ofproto.ofproto_v1_4" title="Permalink to this headline">¶</a></h3>
+<p>OpenFlow 1.4 definitions.</p>
+</div>
+<div class="section" id="module-ryu.ofproto.ofproto_v1_4_parser">
+<span id="ryu-ofproto-ofproto-v1-4-parser"></span><h3>ryu.ofproto.ofproto_v1_4_parser<a class="headerlink" href="#module-ryu.ofproto.ofproto_v1_4_parser" title="Permalink to this headline">¶</a></h3>
+<p>Decoder/Encoder implementations of OpenFlow 1.4.</p>
+</div>
+</div>
+<div class="section" id="ryu-applications">
+<h2>Ryu applications<a class="headerlink" href="#ryu-applications" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ryu.app.cbench">
+<span id="ryu-app-cbench"></span><h3>ryu.app.cbench<a class="headerlink" href="#module-ryu.app.cbench" title="Permalink to this headline">¶</a></h3>
+<p>A dumb OpenFlow 1.0 responder for benchmarking the controller framework.
+Intended to be used with oflops cbench.</p>
+</div>
+<div class="section" id="module-ryu.app.simple_switch">
+<span id="ryu-app-simple-switch"></span><h3>ryu.app.simple_switch<a class="headerlink" href="#module-ryu.app.simple_switch" title="Permalink to this headline">¶</a></h3>
+<p>An OpenFlow 1.0 L2 learning switch implementation.</p>
+</div>
+<div class="section" id="module-ryu.app.simple_isolation">
+<span id="ryu-app-simple-isolation"></span><h3>ryu.app.simple_isolation<a class="headerlink" href="#module-ryu.app.simple_isolation" title="Permalink to this headline">¶</a></h3>
+<p>MAC address based isolation logic.</p>
+</div>
+<div class="section" id="module-ryu.app.simple_vlan">
+<span id="ryu-app-simple-vlan"></span><h3>ryu.app.simple_vlan<a class="headerlink" href="#module-ryu.app.simple_vlan" title="Permalink to this headline">¶</a></h3>
+<p>VLAN based isolation logic.</p>
+</div>
+<div class="section" id="module-ryu.app.gre_tunnel">
+<span id="ryu-app-gre-tunnel"></span><h3>ryu.app.gre_tunnel<a class="headerlink" href="#module-ryu.app.gre_tunnel" title="Permalink to this headline">¶</a></h3>
+<p>Flow table updater for OpenStack integration. Despite of the name, this
+isn&#8217;t GRE specific.</p>
+</div>
+<div class="section" id="module-ryu.app.tunnel_port_updater">
+<span id="ryu-app-tunnel-port-updater"></span><h3>ryu.app.tunnel_port_updater<a class="headerlink" href="#module-ryu.app.tunnel_port_updater" title="Permalink to this headline">¶</a></h3>
+<p>This module updates OVS tunnel ports for OpenStack integration.</p>
+</div>
+<div class="section" id="module-ryu.app.quantum_adapter">
+<span id="ryu-app-quantum-adapter"></span><h3>ryu.app.quantum_adapter<a class="headerlink" href="#module-ryu.app.quantum_adapter" title="Permalink to this headline">¶</a></h3>
+<p>Listen OpenFlow port status change notifications from switches. Consult
+ovsdb to retrieve the corresponding port uuid. Notify relevant parties,
+including quantum (via Ryu plug-in) and Ryu applications. (via Ryu Events)</p>
+</div>
+<div class="section" id="module-ryu.app.rest">
+<span id="ryu-app-rest"></span><h3>ryu.app.rest<a class="headerlink" href="#module-ryu.app.rest" title="Permalink to this headline">¶</a></h3>
+<p>This module provides a basic set of REST API.</p>
+<ul>
+<li><p class="first">Network registration</p>
+</li>
+<li><dl class="first docutils">
+<dt>End-point port management</dt>
+<dd><ul class="first last simple">
+<li>OpenFlow port number</li>
+<li>MAC address (for anti-spoofing)</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Used by OpenStack Ryu plug-in.</p>
+</div>
+<div class="section" id="module-ryu.app.rest_conf_switch">
+<span id="ryu-app-rest-conf-switch"></span><h3>ryu.app.rest_conf_switch<a class="headerlink" href="#module-ryu.app.rest_conf_switch" title="Permalink to this headline">¶</a></h3>
+<p>This module provides a set of REST API for switch configuration.
+- Per-switch Key-Value store</p>
+<p>Used by OpenStack Ryu agent.</p>
+</div>
+<div class="section" id="module-ryu.app.rest_quantum">
+<span id="ryu-app-rest-quantum"></span><h3>ryu.app.rest_quantum<a class="headerlink" href="#module-ryu.app.rest_quantum" title="Permalink to this headline">¶</a></h3>
+<p>This module provides a set of REST API dedicated to OpenStack Ryu plug-in.</p>
+<ul class="simple">
+<li>Interface (uuid in ovsdb) registration</li>
+<li>Maintain interface association to a network</li>
+</ul>
+<p>Used by OpenStack Ryu plug-in.</p>
+</div>
+<div class="section" id="module-ryu.app.rest_tunnel">
+<span id="ryu-app-rest-tunnel"></span><h3>ryu.app.rest_tunnel<a class="headerlink" href="#module-ryu.app.rest_tunnel" title="Permalink to this headline">¶</a></h3>
+<p>Provide a set of REST API for tunnel key management. Used by OpenStack
+Ryu plug-in.</p>
+<ul class="simple">
+<li>Tunnel key registration for a network</li>
+<li>Manage switches and their ports which are used to establish a tunnel</li>
+</ul>
+</div>
+<div class="section" id="module-ryu.topology">
+<span id="ryu-topology"></span><h3>ryu.topology<a class="headerlink" href="#module-ryu.topology" title="Permalink to this headline">¶</a></h3>
+<p>Switch and link discovery module. Planned to replace ryu/controller/dpset.</p>
+</div>
+</div>
+<div class="section" id="libraries">
+<h2>Libraries<a class="headerlink" href="#libraries" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ryu.lib.packet">
+<span id="ryu-lib-packet"></span><h3>ryu.lib.packet<a class="headerlink" href="#module-ryu.lib.packet" title="Permalink to this headline">¶</a></h3>
+<p>Ryu packet library. Decoder/Encoder implementations of popular protocols
+like TCP/IP.</p>
+</div>
+<div class="section" id="module-ryu.lib.ovs">
+<span id="ryu-lib-ovs"></span><h3>ryu.lib.ovs<a class="headerlink" href="#module-ryu.lib.ovs" title="Permalink to this headline">¶</a></h3>
+<p>ovsdb interaction library.</p>
+</div>
+<div class="section" id="module-ryu.lib.of_config">
+<span id="ryu-lib-of-config"></span><h3>ryu.lib.of_config<a class="headerlink" href="#module-ryu.lib.of_config" title="Permalink to this headline">¶</a></h3>
+<p>OF-Config implementation.</p>
+</div>
+<div class="section" id="module-ryu.lib.netconf">
+<span id="ryu-lib-netconf"></span><h3>ryu.lib.netconf<a class="headerlink" href="#module-ryu.lib.netconf" title="Permalink to this headline">¶</a></h3>
+<p>NETCONF definitions used by ryu/lib/of_config.</p>
+</div>
+<div class="section" id="module-ryu.lib.xflow">
+<span id="ryu-lib-xflow"></span><h3>ryu.lib.xflow<a class="headerlink" href="#module-ryu.lib.xflow" title="Permalink to this headline">¶</a></h3>
+<p>An implementation of sFlow and NetFlow.</p>
+</div>
+</div>
+<div class="section" id="third-party-libraries">
+<h2>Third party libraries<a class="headerlink" href="#third-party-libraries" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ryu-contrib-ovs">
+<h3>ryu.contrib.ovs<a class="headerlink" href="#ryu-contrib-ovs" title="Permalink to this headline">¶</a></h3>
+<p>Open vSwitch python binding. Used by ryu.lib.ovs.</p>
+</div>
+<div class="section" id="ryu-contrib-oslo-config">
+<h3>ryu.contrib.oslo.config<a class="headerlink" href="#ryu-contrib-oslo-config" title="Permalink to this headline">¶</a></h3>
+<p>Oslo configuration library. Used for ryu-manager&#8217;s command-line options
+and configuration files.</p>
+</div>
+<div class="section" id="ryu-contrib-ncclient">
+<h3>ryu.contrib.ncclient<a class="headerlink" href="#ryu-contrib-ncclient" title="Permalink to this headline">¶</a></h3>
+<p>Python library for NETCONF client. Used by ryu.lib.of_config.</p>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="writing_ryu_app.html">The First Application</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ryu_app_api.html">Ryu application API</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

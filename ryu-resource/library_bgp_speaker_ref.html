@@ -1,0 +1,594 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BGP speaker library API Reference &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="index.html" />
+    <link rel="up" title="Library" href="library.html" />
+    <link rel="next" title="OpenFlow protocol API Reference" href="ofproto_ref.html" />
+    <link rel="prev" title="BGP speaker library" href="library_bgp_speaker.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>BGP speaker library API Reference</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="library_bgp_speaker.html">BGP speaker library</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ofproto_ref.html">OpenFlow protocol API Reference</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="bgp-speaker-library-api-reference">
+<h1>BGP speaker library API Reference<a class="headerlink" href="#bgp-speaker-library-api-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bgpspeaker-class">
+<h2>BGPSpeaker class<a class="headerlink" href="#bgpspeaker-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker">
+<em class="property">class </em><code class="descclassname">ryu.services.protocols.bgp.bgpspeaker.</code><code class="descname">BGPSpeaker</code><span class="sig-paren">(</span><em>as_number</em>, <em>router_id</em>, <em>bgp_server_port=179</em>, <em>refresh_stalepath_time=0</em>, <em>refresh_max_eor_time=0</em>, <em>best_path_change_handler=None</em>, <em>peer_down_handler=None</em>, <em>peer_up_handler=None</em>, <em>ssh_console=False</em>, <em>label_range=(100</em>, <em>100000)</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.attribute_map_get">
+<code class="descname">attribute_map_get</code><span class="sig-paren">(</span><em>address</em>, <em>route_dist=None</em>, <em>route_family='ipv4'</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.attribute_map_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method gets in-bound filters of the specified neighbor.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the neighbor.</p>
+<p><code class="docutils literal"><span class="pre">route_dist</span></code> specifies route distinguisher that has attribute_maps.</p>
+<p><code class="docutils literal"><span class="pre">route_family</span></code> specifies route family of the VRF.
+This parameter must be RF_VPN_V4 or RF_VPN_V6.</p>
+<p>Returns a list object containing an instance of AttributeMap</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.attribute_map_set">
+<code class="descname">attribute_map_set</code><span class="sig-paren">(</span><em>address</em>, <em>attribute_maps</em>, <em>route_dist=None</em>, <em>route_family='ipv4'</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.attribute_map_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method sets attribute mapping to a neighbor.
+attribute mapping can be used when you want to apply
+attribute to BGPUpdate under specific conditions.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the neighbor</p>
+<p><code class="docutils literal"><span class="pre">attribute_maps</span></code> specifies attribute_map list that are used
+before paths are advertised. All the items in the list must
+be an instance of AttributeMap class</p>
+<p><code class="docutils literal"><span class="pre">route_dist</span></code> specifies route dist in which attribute_maps
+are added.</p>
+<p><code class="docutils literal"><span class="pre">route_family</span></code> specifies route family of the VRF.
+This parameter must be RF_VPN_V4 or RF_VPN_V6.</p>
+<p>We can set AttributeMap to a neighbor as follows;</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>pref_filter = PrefixFilter(&#8216;192.168.103.0/30&#8217;,</dt>
+<dd>PrefixFilter.POLICY_PERMIT)</dd>
+<dt>attribute_map = AttributeMap([pref_filter],</dt>
+<dd>AttributeMap.ATTR_LOCAL_PREF, 250)</dd>
+</dl>
+<p>speaker.attribute_map_set(&#8216;192.168.50.102&#8217;, [attribute_map])</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.bmp_server_add">
+<code class="descname">bmp_server_add</code><span class="sig-paren">(</span><em>address</em>, <em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.bmp_server_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method registers a new BMP (BGP monitoring Protocol)
+server. The BGP speaker starts to send BMP messages to the
+server. Currently, only one BMP server can be registered.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of a BMP server.</p>
+<p><code class="docutils literal"><span class="pre">port</span></code> specifies the listen port number of a BMP server.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.bmp_server_del">
+<code class="descname">bmp_server_del</code><span class="sig-paren">(</span><em>address</em>, <em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.bmp_server_del" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method unregister the registered BMP server.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of a BMP server.</p>
+<p><code class="docutils literal"><span class="pre">port</span></code> specifies the listen port number of a BMP server.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.in_filter_get">
+<code class="descname">in_filter_get</code><span class="sig-paren">(</span><em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.in_filter_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method gets in-bound filters of the specified neighbor.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the neighbor.</p>
+<p>Returns a list object containing an instance of Filter sub-class</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.in_filter_set">
+<code class="descname">in_filter_set</code><span class="sig-paren">(</span><em>address</em>, <em>filters</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.in_filter_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method sets in-bound filters to a neighbor.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the neighbor</p>
+<p><code class="docutils literal"><span class="pre">filters</span></code> specifies filter list applied before advertised paths are
+imported to the global rib. All the items in the list must be an
+instance of Filter sub-class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_add">
+<code class="descname">neighbor_add</code><span class="sig-paren">(</span><em>address</em>, <em>remote_as</em>, <em>enable_ipv4=True</em>, <em>enable_vpnv4=False</em>, <em>enable_vpnv6=False</em>, <em>next_hop=None</em>, <em>password=None</em>, <em>multi_exit_disc=None</em>, <em>site_of_origins=None</em>, <em>is_route_server_client=False</em>, <em>is_next_hop_self=False</em>, <em>local_address=None</em>, <em>local_port=None</em>, <em>connect_mode='both'</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method registers a new neighbor. The BGP speaker tries to
+establish a bgp session with the peer (accepts a connection
+from the peer and also tries to connect to it).</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the peer. It must be
+the string representation of an IP address. Only IP v4 is
+supported now.</p>
+<p><code class="docutils literal"><span class="pre">remote_as</span></code> specifies the AS number of the peer. It must be
+an integer between 1 and 65535.</p>
+<p><code class="docutils literal"><span class="pre">enable_ipv4</span></code> enables IPv4 address family for this
+neighbor. The default is True.</p>
+<p><code class="docutils literal"><span class="pre">enable_vpnv4</span></code> enables VPNv4 address family for this
+neighbor. The default is False.</p>
+<p><code class="docutils literal"><span class="pre">enable_vpnv6</span></code> enables VPNv6 address family for this
+neighbor. The default is False.</p>
+<p><code class="docutils literal"><span class="pre">next_hop</span></code> specifies the next hop IP address. If not
+specified, host&#8217;s ip address to access to a peer is used.</p>
+<p><code class="docutils literal"><span class="pre">password</span></code> is used for the MD5 authentication if it&#8217;s
+specified. By default, the MD5 authenticaiton is disabled.</p>
+<p><code class="docutils literal"><span class="pre">multi_exit_disc</span></code> specifies multi exit discriminator (MED) value.
+The default is None and if not specified, MED value is
+not sent to the neighbor. It must be an integer.</p>
+<p><code class="docutils literal"><span class="pre">site_of_origins</span></code> specifies site_of_origin values.
+This parameter must be a list of string.</p>
+<p><code class="docutils literal"><span class="pre">is_route_server_client</span></code> specifies whether this neighbor is a
+router server&#8217;s client or not.</p>
+<p><code class="docutils literal"><span class="pre">is_next_hop_self</span></code> specifies whether the BGP speaker announces
+its own ip address to iBGP neighbor or not as path&#8217;s next_hop address.</p>
+<p><code class="docutils literal"><span class="pre">connect_mode</span></code> specifies how to connect to this neighbor.
+CONNECT_MODE_ACTIVE tries to connect from us.
+CONNECT_MODE_PASSIVE just listens and wait for the connection.
+CONNECT_MODE_BOTH use both methods.
+The default is CONNECT_MODE_BOTH</p>
+<p><code class="docutils literal"><span class="pre">local_address</span></code> specifies Loopback interface address for
+iBGP peering.</p>
+<p><code class="docutils literal"><span class="pre">local_port</span></code> specifies source TCP port for iBGP peering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_del">
+<code class="descname">neighbor_del</code><span class="sig-paren">(</span><em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_del" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method unregister the registered neighbor. If a session with
+the peer exists, the session will be closed.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the peer. It must be
+the string representation of an IP address.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_get">
+<code class="descname">neighbor_get</code><span class="sig-paren">(</span><em>routetype</em>, <em>address</em>, <em>format='json'</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the BGP adj-RIB-in information in a json
+format.</p>
+<p><code class="docutils literal"><span class="pre">routetype</span></code> This parameter is necessary for only received-routes
+and sent-routes.</p>
+<blockquote>
+<div><p>received-routes : paths received and not withdrawn by given peer</p>
+<p>sent-routes : paths sent and not withdrawn to given peer</p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the peer. It must be
+the string representation of an IP address.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_reset">
+<code class="descname">neighbor_reset</code><span class="sig-paren">(</span><em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method reset the registered neighbor.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the peer. It must be
+the string representation of an IP address.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_update">
+<code class="descname">neighbor_update</code><span class="sig-paren">(</span><em>address</em>, <em>conf_type</em>, <em>conf_value</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.neighbor_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method changes the neighbor configuration.</p>
+<p><code class="docutils literal"><span class="pre">conf_type</span></code> specifies configuration type which you want to change.
+Currently ryu.services.protocols.bgp.bgpspeaker.NEIGHBOR_CONF_MED
+can be specified.</p>
+<p><code class="docutils literal"><span class="pre">conf_value</span></code> specifies value for the configuration type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.out_filter_get">
+<code class="descname">out_filter_get</code><span class="sig-paren">(</span><em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.out_filter_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method gets out-filter setting from the specified neighbor.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the peer.</p>
+<p>Returns a list object containing an instance of Filter sub-class</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.out_filter_set">
+<code class="descname">out_filter_set</code><span class="sig-paren">(</span><em>address</em>, <em>filters</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.out_filter_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method sets out-filter to neighbor.</p>
+<p><code class="docutils literal"><span class="pre">address</span></code> specifies the IP address of the peer.</p>
+<p><code class="docutils literal"><span class="pre">filters</span></code> specifies a filter list to filter the path advertisement.
+The contents must be an instance of Filter sub-class</p>
+<p>If you want to define out-filter that send only a particular
+prefix to neighbor, filters can be created as follows;</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>p = PrefixFilter(&#8216;10.5.111.0/24&#8217;,</dt>
+<dd>policy=PrefixFilter.POLICY_PERMIT)</dd>
+<dt>all = PrefixFilter(&#8216;0.0.0.0/0&#8217;,</dt>
+<dd>policy=PrefixFilter.POLICY_DENY)</dd>
+</dl>
+<p>pList = [p, all]</p>
+<p>self.bgpspeaker.out_filter_set(neighbor_address, pList)</p>
+</div></blockquote>
+<p>NOTE:
+out-filter evaluates paths in the order of Filter in the pList.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.prefix_add">
+<code class="descname">prefix_add</code><span class="sig-paren">(</span><em>prefix</em>, <em>next_hop=None</em>, <em>route_dist=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.prefix_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method adds a new prefix to be advertized.</p>
+<p><code class="docutils literal"><span class="pre">prefix</span></code> must be the string representation of an IP network
+(e.g., 10.1.1.0/24).</p>
+<p><code class="docutils literal"><span class="pre">next_hop</span></code> specifies the next hop address for this
+prefix. This parameter is necessary for only VPNv4 and VPNv6
+address families.</p>
+<p><code class="docutils literal"><span class="pre">route_dist</span></code> specifies a route distinguisher value. This
+parameter is necessary for only VPNv4 and VPNv6 address
+families.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.prefix_del">
+<code class="descname">prefix_del</code><span class="sig-paren">(</span><em>prefix</em>, <em>route_dist=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.prefix_del" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method deletes a advertized prefix.</p>
+<p><code class="docutils literal"><span class="pre">prefix</span></code> must be the string representation of an IP network
+(e.g., 10.1.1.0/24).</p>
+<p><code class="docutils literal"><span class="pre">route_dist</span></code> specifies a route distinguisher value. This
+parameter is necessary for only VPNv4 and VPNv6 address
+families.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.rib_get">
+<code class="descname">rib_get</code><span class="sig-paren">(</span><em>family='ipv4'</em>, <em>format='json'</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.rib_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the BGP routing information in a json
+format. This will be improved soon.</p>
+<p><code class="docutils literal"><span class="pre">family</span></code> specifies the address family of the RIB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.shutdown">
+<code class="descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shutdown BGP speaker</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.vrf_add">
+<code class="descname">vrf_add</code><span class="sig-paren">(</span><em>route_dist</em>, <em>import_rts</em>, <em>export_rts</em>, <em>site_of_origins=None</em>, <em>route_family='ipv4'</em>, <em>multi_exit_disc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.vrf_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method adds a new vrf used for VPN.</p>
+<p><code class="docutils literal"><span class="pre">route_dist</span></code> specifies a route distinguisher value.</p>
+<p><code class="docutils literal"><span class="pre">import_rts</span></code> specifies route targets to be imported.</p>
+<p><code class="docutils literal"><span class="pre">export_rts</span></code> specifies route targets to be exported.</p>
+<p><code class="docutils literal"><span class="pre">site_of_origins</span></code> specifies site_of_origin values.
+This parameter must be a list of string.</p>
+<p><code class="docutils literal"><span class="pre">route_family</span></code> specifies route family of the VRF.
+This parameter must be RF_VPN_V4 or RF_VPN_V6.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.vrf_del">
+<code class="descname">vrf_del</code><span class="sig-paren">(</span><em>route_dist</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.BGPSpeaker.vrf_del" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method deletes the existing vrf.</p>
+<p><code class="docutils literal"><span class="pre">route_dist</span></code> specifies a route distinguisher value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ryu.services.protocols.bgp.bgpspeaker.EventPrefix">
+<em class="property">class </em><code class="descclassname">ryu.services.protocols.bgp.bgpspeaker.</code><code class="descname">EventPrefix</code><span class="sig-paren">(</span><em>remote_as</em>, <em>route_dist</em>, <em>prefix</em>, <em>nexthop</em>, <em>label</em>, <em>is_withdraw</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.bgpspeaker.EventPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to pass an update on any best remote path to
+best_path_change_handler.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>remote_as</td>
+<td>The AS number of a peer that caused this change</td>
+</tr>
+<tr class="row-odd"><td>route_dist</td>
+<td>None in the case of ipv4 or ipv6 family</td>
+</tr>
+<tr class="row-even"><td>prefix</td>
+<td>A prefix was changed</td>
+</tr>
+<tr class="row-odd"><td>nexthop</td>
+<td>The nexthop of the changed prefix</td>
+</tr>
+<tr class="row-even"><td>label</td>
+<td>mpls label for vpnv4 prefix</td>
+</tr>
+<tr class="row-odd"><td>is_withdraw</td>
+<td>True if this prefix has gone otherwise False</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="ryu.services.protocols.bgp.info_base.base.PrefixFilter">
+<em class="property">class </em><code class="descclassname">ryu.services.protocols.bgp.info_base.base.</code><code class="descname">PrefixFilter</code><span class="sig-paren">(</span><em>prefix</em>, <em>policy</em>, <em>ge=None</em>, <em>le=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.info_base.base.PrefixFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>used to specify a prefix for filter.</p>
+<p>We can create PrefixFilter object as follows.</p>
+<dl class="docutils">
+<dt>prefix_filter = PrefixFilter(&#8216;10.5.111.0/24&#8217;,</dt>
+<dd>policy=PrefixFilter.POLICY_PERMIT)</dd>
+</dl>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>prefix</td>
+<td>A prefix used for this filter</td>
+</tr>
+<tr class="row-odd"><td>policy</td>
+<td>PrefixFilter.POLICY.PERMIT or PrefixFilter.POLICY_DENY</td>
+</tr>
+<tr class="row-even"><td>ge</td>
+<td>Prefix length that will be applied to this filter.
+ge means greater than or equal.</td>
+</tr>
+<tr class="row-odd"><td>le</td>
+<td>Prefix length that will be applied to this filter.
+le means less than or equal.</td>
+</tr>
+</tbody>
+</table>
+<p>For example, when PrefixFilter object is created as follows:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>p = PrefixFilter(&#8216;10.5.111.0/24&#8217;,</dt>
+<dd><p class="first last">policy=PrefixFilter.POLICY_DENY,
+ge=26, le=28)</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>prefixes which match 10.5.111.0/24 and its length matches
+from 26 to 28 will be filtered.
+When this filter is used as an out-filter, it will stop sending
+the path to neighbor because of POLICY_DENY.
+When this filter is used as in-filter, it will stop importing the path
+to the global rib because of POLICY_DENY.
+If you specify POLICY_PERMIT, the path is sent to neighbor or imported to
+the global rib.</p>
+<p>If you don&#8217;t want to send prefixes 10.5.111.64/26 and 10.5.111.32/27
+and 10.5.111.16/28, and allow to send other 10.5.111.0&#8217;s prefixes,
+you can do it by specifying as follows;</p>
+<ul>
+<li><dl class="first docutils">
+<dt>p = PrefixFilter(&#8216;10.5.111.0/24&#8217;,</dt>
+<dd><p class="first last">policy=PrefixFilter.POLICY_DENY,
+ge=26, le=28).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.info_base.base.PrefixFilter.clone">
+<code class="descname">clone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.info_base.base.PrefixFilter.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method clones PrefixFilter object.</p>
+<p>Returns PrefixFilter object that has the same values with the
+original one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.info_base.base.PrefixFilter.evaluate">
+<code class="descname">evaluate</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.info_base.base.PrefixFilter.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method evaluates the prefix.</p>
+<p>Returns this object&#8217;s policy and the result of matching.
+If the specified prefix matches this object&#8217;s prefix and
+ge and le condition,
+this method returns True as the matching result.</p>
+<p><code class="docutils literal"><span class="pre">path</span></code> specifies the path that has prefix.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ryu.services.protocols.bgp.info_base.base.ASPathFilter">
+<em class="property">class </em><code class="descclassname">ryu.services.protocols.bgp.info_base.base.</code><code class="descname">ASPathFilter</code><span class="sig-paren">(</span><em>as_number</em>, <em>policy</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.info_base.base.ASPathFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>used to specify a prefix for AS_PATH attribute.</p>
+<p>We can create ASPathFilter object as follows;</p>
+<ul class="simple">
+<li>as_path_filter = ASPathFilter(65000,policy=ASPathFilter.TOP)</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>as_number</td>
+<td>A AS number used for this filter</td>
+</tr>
+<tr class="row-odd"><td>policy</td>
+<td>ASPathFilter.POLICY_TOP and ASPathFilter.POLICY_END,
+ASPathFilter.POLICY_INCLUDE and
+ASPathFilter.POLICY_NOT_INCLUDE are available.</td>
+</tr>
+</tbody>
+</table>
+<p>Meaning of each policy is as follows;</p>
+<ul>
+<li><dl class="first docutils">
+<dt>POLICY_TOP :</dt>
+<dd><p class="first last">Filter checks if the specified AS number is at the top of
+AS_PATH attribute.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>POLICY_END :</dt>
+<dd><p class="first last">Filter checks is the specified AS number
+is at the last of AS_PATH attribute.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>POLICY_INCLUDE :</dt>
+<dd><p class="first last">Filter checks if specified AS number
+exists in AS_PATH attribute</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>POLICY_NOT_INCLUDE :</dt>
+<dd><p class="first last">opposite to POLICY_INCLUDE</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.info_base.base.ASPathFilter.clone">
+<code class="descname">clone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.info_base.base.ASPathFilter.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method clones ASPathFilter object.</p>
+<p>Returns ASPathFilter object that has the same values with the
+original one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.info_base.base.ASPathFilter.evaluate">
+<code class="descname">evaluate</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.info_base.base.ASPathFilter.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method evaluates as_path list.</p>
+<p>Returns this object&#8217;s policy and the result of matching.
+If the specified AS number matches this object&#8217;s AS number
+according to the policy,
+this method returns True as the matching result.</p>
+<p><code class="docutils literal"><span class="pre">path</span></code> specifies the path.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ryu.services.protocols.bgp.info_base.base.AttributeMap">
+<em class="property">class </em><code class="descclassname">ryu.services.protocols.bgp.info_base.base.</code><code class="descname">AttributeMap</code><span class="sig-paren">(</span><em>filters</em>, <em>attr_type</em>, <em>attr_value</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.info_base.base.AttributeMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is used to specify an attribute to add if the path matches
+filters.
+We can create AttributeMap object as follows;</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>pref_filter = PrefixFilter(&#8216;192.168.103.0/30&#8217;,</dt>
+<dd>PrefixFilter.POLICY_PERMIT)</dd>
+<dt>attribute_map = AttributeMap([pref_filter],</dt>
+<dd>AttributeMap.ATTR_LOCAL_PREF, 250)</dd>
+</dl>
+<p>speaker.attribute_map_set(&#8216;192.168.50.102&#8217;, [attribute_map])</p>
+</div></blockquote>
+<p>AttributeMap.ATTR_LOCAL_PREF means that 250 is set as a
+local preference value if nlri in the path matches pref_filter.</p>
+<p>ASPathFilter is also available as a filter. ASPathFilter checks if AS_PATH
+attribute in the path matches AS number in the filter.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="74%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>filters</td>
+<td>A list of filter.
+Each object should be a Filter class or its sub-class</td>
+</tr>
+<tr class="row-odd"><td>attr_type</td>
+<td>A type of attribute to map on filters. Currently
+AttributeMap.ATTR_LOCAL_PREF is available.</td>
+</tr>
+<tr class="row-even"><td>attr_value</td>
+<td>A attribute value</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.info_base.base.AttributeMap.clone">
+<code class="descname">clone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.info_base.base.AttributeMap.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method clones AttributeMap object.</p>
+<p>Returns AttributeMap object that has the same values with the
+original one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.services.protocols.bgp.info_base.base.AttributeMap.evaluate">
+<code class="descname">evaluate</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.services.protocols.bgp.info_base.base.AttributeMap.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method evaluates attributes of the path.</p>
+<p>Returns the cause and result of matching.
+Both cause and result are returned from filters
+that this object contains.</p>
+<p><code class="docutils literal"><span class="pre">path</span></code> specifies the path.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="library_bgp_speaker.html">BGP speaker library</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ofproto_ref.html">OpenFlow protocol API Reference</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

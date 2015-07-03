@@ -1,0 +1,614 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ryu application API &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="index.html" />
+    <link rel="up" title="Writing Your Ryu Application" href="developing.html" />
+    <link rel="next" title="Library" href="library.html" />
+    <link rel="prev" title="Components of Ryu" href="components.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>Ryu application API</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="components.html">Components of Ryu</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="library.html">Library</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="ryu-application-api">
+<h1>Ryu application API<a class="headerlink" href="#ryu-application-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ryu-application-programming-model">
+<h2>Ryu application programming model<a class="headerlink" href="#ryu-application-programming-model" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="threads-events-and-event-queues">
+<h3>Threads, events, and event queues<a class="headerlink" href="#threads-events-and-event-queues" title="Permalink to this headline">¶</a></h3>
+<p>Ryu applications are single-threaded entities which implement
+various functionalities in Ryu.  Events are messages between them.</p>
+<p>Ryu applications send asynchronous events each other.
+Besides that, there are some Ryu-internal event sources which
+are not Ryu applications.  One of examples of such event sources
+is OpenFlow controller.
+While an event can currently contain arbitrary python objects,
+it&#8217;s discouraged to pass complex objects (eg. unpickleable objects)
+between Ryu applications.</p>
+<p>Each Ryu application has a receive queue for events.
+The queue is FIFO and preserves the order of events.
+Each Ryu application has a thread for event processing.
+The thread keep draining the receive queue by dequeueing an event
+and calling the appropritate event handler for the event type.
+Because the event handler is called in the context of
+the event processing thread, it should be careful for blocking.
+I.e. while an event handler is blocked, no further events for
+the Ryu application will be processed.</p>
+<p>There are kinds of events which are used to implement synchronous
+inter-application calls between Ryu applications.
+While such requests uses the same machinary as ordinary
+events, their replies are put on a queue dedicated to the transaction
+to avoid deadlock.</p>
+<p>While threads and queues is currently implemented with eventlet/greenlet,
+a direct use of them in a Ryu application is strongly discouraged.</p>
+</div>
+<div class="section" id="contexts">
+<h3>Contexts<a class="headerlink" href="#contexts" title="Permalink to this headline">¶</a></h3>
+<p>Contexts are ordinary python objects shared among Ryu applications.
+The use of contexts are discouraged for new code.</p>
+</div>
+</div>
+<div class="section" id="create-a-ryu-application">
+<h2>Create a Ryu application<a class="headerlink" href="#create-a-ryu-application" title="Permalink to this headline">¶</a></h2>
+<p>A Ryu application is a python module which defines a subclass of
+ryu.base.app_manager.RyuApp.
+If two or more such classes are defined in a module, the first one
+(by name order) will be picked by app_manager.
+Ryu application is singleton: only single instance of a given Ryu
+application is supported.</p>
+</div>
+<div class="section" id="observe-events">
+<h2>Observe events<a class="headerlink" href="#observe-events" title="Permalink to this headline">¶</a></h2>
+<p>A Ryu application can register itself to listen for specific events
+using ryu.controller.handler.set_ev_cls decorator.</p>
+</div>
+<div class="section" id="generate-events">
+<h2>Generate events<a class="headerlink" href="#generate-events" title="Permalink to this headline">¶</a></h2>
+<p>A Ryu application can raise events by calling appropriate
+ryu.base.app_manager.RyuApp&#8217;s methods like send_event or
+send_event_to_observers.</p>
+</div>
+<div class="section" id="event-classes">
+<h2>Event classes<a class="headerlink" href="#event-classes" title="Permalink to this headline">¶</a></h2>
+<p>An event class describes a Ryu event generated in the system.
+By convention, event class names are prefixed by &#8220;Event&#8221;.
+Events are generated either by the core part of Ryu or Ryu applications.
+A Ryu application can register its interest for a specific type of
+event by providing a handler method using
+ryu.controller.handler.set_ev_cls decorator.</p>
+<div class="section" id="openflow-event-classes">
+<h3>OpenFlow event classes<a class="headerlink" href="#openflow-event-classes" title="Permalink to this headline">¶</a></h3>
+<p>ryu.controller.ofp_event module exports event classes which describe
+receptions of OpenFlow messages from connected switches.
+By convention, they are named as ryu.controller.ofp_event.EventOFPxxxx
+where xxxx is the name of the corresponding OpenFlow message.
+For example, EventOFPPacketIn for packet-in message.
+The OpenFlow controller part of Ryu automatically decodes OpenFlow messages
+received from switches and send these events to Ryu applications which
+expressed an interest using ryu.controller.handler.set_ev_cls.
+OpenFlow event classes have at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="84%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>msg</td>
+<td>An object which describes the corresponding OpenFlow message.</td>
+</tr>
+<tr class="row-odd"><td>msg.datapath</td>
+<td>A ryu.controller.controller.Datapath instance which describes
+an OpenFlow switch from which we received this OpenFlow message.</td>
+</tr>
+</tbody>
+</table>
+<p>The msg object has some more additional members whose values are extracted
+from the original OpenFlow message.
+See <a class="reference internal" href="ofproto_ref.html#ofproto-ref"><span>OpenFlow protocol API Reference</span></a> for more info about OpenFlow messages.</p>
+</div>
+</div>
+<div class="section" id="ryu-base-app-manager-ryuapp">
+<h2>ryu.base.app_manager.RyuApp<a class="headerlink" href="#ryu-base-app-manager-ryuapp" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference internal" href="api_ref.html#api-ref"><span>Ryu API Reference</span></a>.</p>
+</div>
+<div class="section" id="ryu-controller-handler-set-ev-cls-ev-cls-dispatchers-none">
+<h2>ryu.controller.handler.set_ev_cls(ev_cls, dispatchers=None)<a class="headerlink" href="#ryu-controller-handler-set-ev-cls-ev-cls-dispatchers-none" title="Permalink to this headline">¶</a></h2>
+<p>A decorator for Ryu application to declare an event handler.
+Decorated method will become an event handler.
+ev_cls is an event class whose instances this RyuApp wants to receive.
+dispatchers argument specifies one of the following negotiation phases
+(or a list of them) for which events should be generated for this handler.
+Note that, in case an event changes the phase, the phase before the change
+is used to check the interest.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="56%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Negotiation phase</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>ryu.controller.handler.HANDSHAKE_DISPATCHER</td>
+<td>Sending and waiting for hello
+message</td>
+</tr>
+<tr class="row-odd"><td>ryu.controller.handler.CONFIG_DISPATCHER</td>
+<td>Version negotiated and sent
+features-request message</td>
+</tr>
+<tr class="row-even"><td>ryu.controller.handler.MAIN_DISPATCHER</td>
+<td>Switch-features message received
+and sent set-config message</td>
+</tr>
+<tr class="row-odd"><td>ryu.controller.handler.DEAD_DISPATCHER</td>
+<td>Disconnect from the peer.  Or
+disconnecting due to some
+unrecoverable errors.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-controller-datapath">
+<h2>ryu.controller.controller.Datapath<a class="headerlink" href="#ryu-controller-controller-datapath" title="Permalink to this headline">¶</a></h2>
+<p>A class to describe an OpenFlow switch connected to this controller.
+An instance has the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="49%" />
+<col width="51%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>id</td>
+<td>64-bit OpenFlow Datapath ID.
+Only available for
+ryu.controller.handler.MAIN_DISPATCHER
+phase.</td>
+</tr>
+<tr class="row-odd"><td>ofproto</td>
+<td>A module which exports OpenFlow
+definitions, mainly constants appeared
+in the specification, for the
+negotiated OpenFlow version.  For
+example, ryu.ofproto.ofproto_v1_0 for
+OpenFlow 1.0.</td>
+</tr>
+<tr class="row-even"><td>ofproto_parser</td>
+<td>A module which exports OpenFlow wire
+message encoder and decoder for the
+negotiated OpenFlow version.  For
+example, ryu.ofproto.ofproto_v1_0_parser
+for OpenFlow 1.0.</td>
+</tr>
+<tr class="row-odd"><td>ofproto_parser.OFPxxxx(datapath, ....)</td>
+<td>A callable to prepare an OpenFlow
+message for the given switch.  It can
+be sent with Datapath.send_msg later.
+xxxx is a name of the message.  For
+example OFPFlowMod for flow-mod
+message.  Arguemnts depend on the
+message.</td>
+</tr>
+<tr class="row-even"><td>set_xid(self, msg)</td>
+<td>Generate an OpenFlow XID and put it
+in msg.xid.</td>
+</tr>
+<tr class="row-odd"><td>send_msg(self, msg)</td>
+<td>Queue an OpenFlow message to send to
+the corresponding switch.  If msg.xid
+is None, set_xid is automatically
+called on the message before queueing.</td>
+</tr>
+<tr class="row-even"><td>send_packet_out</td>
+<td>deprecated</td>
+</tr>
+<tr class="row-odd"><td>send_flow_mod</td>
+<td>deprecated</td>
+</tr>
+<tr class="row-even"><td>send_flow_del</td>
+<td>deprecated</td>
+</tr>
+<tr class="row-odd"><td>send_delete_all_flows</td>
+<td>deprecated</td>
+</tr>
+<tr class="row-even"><td>send_barrier</td>
+<td>Queue an OpenFlow barrier message to
+send to the switch.</td>
+</tr>
+<tr class="row-odd"><td>send_nxt_set_flow_format</td>
+<td>deprecated</td>
+</tr>
+<tr class="row-even"><td>is_reserved_port</td>
+<td>deprecated</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-event-eventbase">
+<h2>ryu.controller.event.EventBase<a class="headerlink" href="#ryu-controller-event-eventbase" title="Permalink to this headline">¶</a></h2>
+<p>The base of all event classes.
+A Ryu application can define its own event type by creating a subclass.</p>
+</div>
+<div class="section" id="ryu-controller-event-eventrequestbase">
+<h2>ryu.controller.event.EventRequestBase<a class="headerlink" href="#ryu-controller-event-eventrequestbase" title="Permalink to this headline">¶</a></h2>
+<p>The base class for synchronous request for RyuApp.send_request.</p>
+</div>
+<div class="section" id="ryu-controller-event-eventreplybase">
+<h2>ryu.controller.event.EventReplyBase<a class="headerlink" href="#ryu-controller-event-eventreplybase" title="Permalink to this headline">¶</a></h2>
+<p>The base class for synchronous request reply for RyuApp.send_reply.</p>
+</div>
+<div class="section" id="ryu-controller-ofp-event-eventofpstatechange">
+<h2>ryu.controller.ofp_event.EventOFPStateChange<a class="headerlink" href="#ryu-controller-ofp-event-eventofpstatechange" title="Permalink to this headline">¶</a></h2>
+<p>An event class for negotiation phase change notification.
+An instance of this class is sent to observer after changing
+the negotiation phase.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>datapath</td>
+<td>ryu.controller.controller.Datapath instance of the switch</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-dpset-eventdp">
+<h2>ryu.controller.dpset.EventDP<a class="headerlink" href="#ryu-controller-dpset-eventdp" title="Permalink to this headline">¶</a></h2>
+<p>An event class to notify connect/disconnect of a switch.
+For OpenFlow switches, one can get the same notification by observing
+ryu.controller.ofp_event.EventOFPStateChange.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dp</td>
+<td>A ryu.controller.controller.Datapath instance of the switch</td>
+</tr>
+<tr class="row-odd"><td>enter</td>
+<td>True when the switch connected to our controller.  False for
+disconnect.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-dpset-eventportadd">
+<h2>ryu.controller.dpset.EventPortAdd<a class="headerlink" href="#ryu-controller-dpset-eventportadd" title="Permalink to this headline">¶</a></h2>
+<p>An event class for switch port status notification.
+This event is generated when a new port is added to a switch.
+For OpenFlow switches, one can get the same notification by observing
+ryu.controller.ofp_event.EventOFPPortStatus.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dp</td>
+<td>A ryu.controller.controller.Datapath instance of the switch</td>
+</tr>
+<tr class="row-odd"><td>port</td>
+<td>port number</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-dpset-eventportdelete">
+<h2>ryu.controller.dpset.EventPortDelete<a class="headerlink" href="#ryu-controller-dpset-eventportdelete" title="Permalink to this headline">¶</a></h2>
+<p>An event class for switch port status notification.
+This event is generated when a port is removed from a switch.
+For OpenFlow switches, one can get the same notification by observing
+ryu.controller.ofp_event.EventOFPPortStatus.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dp</td>
+<td>A ryu.controller.controller.Datapath instance of the switch</td>
+</tr>
+<tr class="row-odd"><td>port</td>
+<td>port number</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-dpset-eventportmodify">
+<h2>ryu.controller.dpset.EventPortModify<a class="headerlink" href="#ryu-controller-dpset-eventportmodify" title="Permalink to this headline">¶</a></h2>
+<p>An event class for switch port status notification.
+This event is generated when some attribute of a port is changed.
+For OpenFlow switches, one can get the same notification by observing
+ryu.controller.ofp_event.EventOFPPortStatus.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dp</td>
+<td>A ryu.controller.controller.Datapath instance of the switch</td>
+</tr>
+<tr class="row-odd"><td>port</td>
+<td>port number</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-network-eventnetworkport">
+<h2>ryu.controller.network.EventNetworkPort<a class="headerlink" href="#ryu-controller-network-eventnetworkport" title="Permalink to this headline">¶</a></h2>
+<p>An event class for notification of port arrival and deperture.
+This event is generated when a port is introduced to or removed from a network
+by the REST API.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>network_id</td>
+<td>Network ID</td>
+</tr>
+<tr class="row-odd"><td>dpid</td>
+<td>OpenFlow Datapath ID of the switch to which the port belongs.</td>
+</tr>
+<tr class="row-even"><td>port_no</td>
+<td>OpenFlow port number of the port</td>
+</tr>
+<tr class="row-odd"><td>add_del</td>
+<td>True for adding a port.  False for removing a port.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-network-eventnetworkdel">
+<h2>ryu.controller.network.EventNetworkDel<a class="headerlink" href="#ryu-controller-network-eventnetworkdel" title="Permalink to this headline">¶</a></h2>
+<p>An event class for network deletion.
+This event is generated when a network is deleted by the REST API.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>network_id</td>
+<td>Network ID</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-network-eventmacaddress">
+<h2>ryu.controller.network.EventMacAddress<a class="headerlink" href="#ryu-controller-network-eventmacaddress" title="Permalink to this headline">¶</a></h2>
+<p>An event class for end-point MAC address registration.
+This event is generated when a end-point MAC address is updated
+by the REST API.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>network_id</td>
+<td>Network ID</td>
+</tr>
+<tr class="row-odd"><td>dpid</td>
+<td>OpenFlow Datapath ID of the switch to which the port belongs.</td>
+</tr>
+<tr class="row-even"><td>port_no</td>
+<td>OpenFlow port number of the port</td>
+</tr>
+<tr class="row-odd"><td>mac_address</td>
+<td>The old MAC address of the port if add_del is False.  Otherwise
+the new MAC address.</td>
+</tr>
+<tr class="row-even"><td>add_del</td>
+<td>False if this event is a result of a port removal.  Otherwise
+True.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-tunnels-eventtunnelkeyadd">
+<h2>ryu.controller.tunnels.EventTunnelKeyAdd<a class="headerlink" href="#ryu-controller-tunnels-eventtunnelkeyadd" title="Permalink to this headline">¶</a></h2>
+<p>An event class for tunnel key registration.
+This event is generated when a tunnel key is registered or updated
+by the REST API.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>network_id</td>
+<td>Network ID</td>
+</tr>
+<tr class="row-odd"><td>tunnel_key</td>
+<td>Tunnel Key</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-tunnels-eventtunnelkeydel">
+<h2>ryu.controller.tunnels.EventTunnelKeyDel<a class="headerlink" href="#ryu-controller-tunnels-eventtunnelkeydel" title="Permalink to this headline">¶</a></h2>
+<p>An event class for tunnel key registration.
+This event is generated when a tunnel key is removed by the REST API.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>network_id</td>
+<td>Network ID</td>
+</tr>
+<tr class="row-odd"><td>tunnel_key</td>
+<td>Tunnel Key</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ryu-controller-tunnels-eventtunnelport">
+<h2>ryu.controller.tunnels.EventTunnelPort<a class="headerlink" href="#ryu-controller-tunnels-eventtunnelport" title="Permalink to this headline">¶</a></h2>
+<p>An event class for tunnel port registration.
+This event is generated when a tunnel port is added or removed by the REST API.
+An instance has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>OpenFlow Datapath ID</td>
+</tr>
+<tr class="row-odd"><td>port_no</td>
+<td>OpenFlow port number</td>
+</tr>
+<tr class="row-even"><td>remote_dpid</td>
+<td>OpenFlow port number of the tunnel peer</td>
+</tr>
+<tr class="row-odd"><td>add_del</td>
+<td>True for adding a tunnel.  False for removal.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="components.html">Components of Ryu</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="library.html">Library</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

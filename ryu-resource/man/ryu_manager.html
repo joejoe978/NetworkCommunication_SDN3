@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ryu-manager manual page &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="../index.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>ryu-manager manual page</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="ryu-manager-manual-page">
+<h1>ryu-manager manual page<a class="headerlink" href="#ryu-manager-manual-page" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<p><strong>ryu-manager</strong> [-h]
+[&#8211;app-lists APP_LISTS] [&#8211;ca-certs CA_CERTS]
+[&#8211;config-dir DIR] [&#8211;config-file PATH]
+[&#8211;ctl-cert CTL_CERT] [&#8211;ctl-privkey CTL_PRIVKEY]
+[&#8211;default-log-level DEFAULT_LOG_LEVEL] [&#8211;explicit-drop]
+[&#8211;install-lldp-flow] [&#8211;log-config-file LOG_CONFIG_FILE]
+[&#8211;log-dir LOG_DIR] [&#8211;log-file LOG_FILE]
+[&#8211;log-file-mode LOG_FILE_MODE]
+[&#8211;neutron-admin-auth-url NEUTRON_ADMIN_AUTH_URL]
+[&#8211;neutron-admin-password NEUTRON_ADMIN_PASSWORD]
+[&#8211;neutron-admin-tenant-name NEUTRON_ADMIN_TENANT_NAME]
+[&#8211;neutron-admin-username NEUTRON_ADMIN_USERNAME]
+[&#8211;neutron-auth-strategy NEUTRON_AUTH_STRATEGY]
+[&#8211;neutron-controller-addr NEUTRON_CONTROLLER_ADDR]
+[&#8211;neutron-url NEUTRON_URL]
+[&#8211;neutron-url-timeout NEUTRON_URL_TIMEOUT]
+[&#8211;noexplicit-drop] [&#8211;noinstall-lldp-flow]
+[&#8211;noobserve-links] [&#8211;nouse-stderr] [&#8211;nouse-syslog]
+[&#8211;noverbose] [&#8211;observe-links]
+[&#8211;ofp-listen-host OFP_LISTEN_HOST]
+[&#8211;ofp-ssl-listen-port OFP_SSL_LISTEN_PORT]
+[&#8211;ofp-tcp-listen-port OFP_TCP_LISTEN_PORT] [&#8211;use-stderr]
+[&#8211;use-syslog] [&#8211;verbose] [&#8211;version]
+[&#8211;wsapi-host WSAPI_HOST] [&#8211;wsapi-port WSAPI_PORT]
+[&#8211;test-switch-dir TEST-SWITCH_DIR]
+[&#8211;test-switch-target TEST-SWITCH_TARGET]
+[&#8211;test-switch-tester TEST-SWITCH_TESTER]
+[app [app ...]]</p>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">ryu-manager</strong> is the executable for Ryu applications. ryu-manager
+loads Ryu applications and run it.</p>
+<p>Ryu is a component-based software defined networking framework. Ryu
+provides software components with well defined API that make it easy for
+developers to create new network management and control applications.
+Ryu supports various protocols for managing network devices, such as
+OpenFlow, Netconf, OF-config, etc. About OpenFlow, Ryu supports fully
+1.0, 1.2, 1.3, 1.4 and Nicira Extensions.</p>
+</div>
+<div class="section" id="options">
+<h2>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>app</dt>
+<dd>application module name to run</dd>
+</dl>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
+<td>show this help message and exit</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--app-lists <var>APP_LISTS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>application module name to run</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--ca-certs <var>CA_CERTS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>CA certificates</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--config-dir <var>DIR</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Path to a config directory to pull *.conf files from.
+This file set is sorted, so as to provide a
+predictable parse order if individual options are
+over-ridden. The set is parsed after the file(s)
+specified via previous &#8211;config-file, arguments hence
+over-ridden options in the directory take precedence.</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--config-file <var>PATH</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Path to a config file to use. Multiple config files
+can be specified, with values in later files taking
+precedence. The default files used are: None</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--ctl-cert <var>CTL_CERT</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>controller certificate</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--ctl-privkey <var>CTL_PRIVKEY</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>controller private key</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--default-log-level <var>DEFAULT_LOG_LEVEL</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>default log level</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--explicit-drop</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>link discovery: explicitly drop lldp packet in</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--install-lldp-flow</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>link discovery: explicitly install flow entry to send
+lldp packet to controller</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--log-config-file <var>LOG_CONFIG_FILE</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Path to a logging config file to use</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--log-dir <var>LOG_DIR</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>log file directory</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--log-file <var>LOG_FILE</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>log file name</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--log-file-mode <var>LOG_FILE_MODE</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>default log file permission</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--neutron-admin-auth-url <var>NEUTRON_ADMIN_AUTH_URL</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>auth url for connecting to neutron in admin context</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--neutron-admin-password <var>NEUTRON_ADMIN_PASSWORD</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>password for connecting to neutron in admin context</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--neutron-admin-tenant-name <var>NEUTRON_ADMIN_TENANT_NAME</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>tenant name for connecting to neutron in admin context</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--neutron-admin-username <var>NEUTRON_ADMIN_USERNAME</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>username for connecting to neutron in admin context</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--neutron-auth-strategy <var>NEUTRON_AUTH_STRATEGY</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>auth strategy for connecting to neutron in admincontext</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--neutron-controller-addr <var>NEUTRON_CONTROLLER_ADDR</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>openflow method:address:port to set controller ofovs bridge</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--neutron-url <var>NEUTRON_URL</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>URL for connecting to neutron</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--neutron-url-timeout <var>NEUTRON_URL_TIMEOUT</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>timeout value for connecting to neutron in seconds</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--noexplicit-drop</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The inverse of &#8211;explicit-drop</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--noinstall-lldp-flow</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The inverse of &#8211;install-lldp-flow</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--noobserve-links</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The inverse of &#8211;observe-links</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--nouse-stderr</span></kbd></td>
+<td>The inverse of &#8211;use-stderr</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--nouse-syslog</span></kbd></td>
+<td>The inverse of &#8211;use-syslog</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--noverbose</span></kbd></td>
+<td>The inverse of &#8211;verbose</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--observe-links</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>observe link discovery events.</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--ofp-listen-host <var>OFP_LISTEN_HOST</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>openflow listen host</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--ofp-ssl-listen-port <var>OFP_SSL_LISTEN_PORT</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>openflow ssl listen port</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--ofp-tcp-listen-port <var>OFP_TCP_LISTEN_PORT</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>openflow tcp listen port</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--use-stderr</span></kbd></td>
+<td>log to standard error</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--use-syslog</span></kbd></td>
+<td>output to syslog</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--verbose</span></kbd></td>
+<td>show debug output</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--version</span></kbd></td>
+<td>show program&#8217;s version number and exit</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--wsapi-host <var>WSAPI_HOST</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>webapp listen host</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--wsapi-port <var>WSAPI_PORT</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>webapp listen port</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--test-switch-dir <var>TEST-SWITCH_DIR</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>test files directory</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--test-switch-target <var>TEST-SWITCH_TARGET</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>target sw dp-id</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--test-switch-tester <var>TEST-SWITCH_TESTER</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>tester sw dp-id</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

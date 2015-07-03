@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Testing OF-config support with LINC &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="index.html" />
+    <link rel="up" title="Tests" href="tests.html" />
+    <link rel="next" title="Using Ryu Network Operating System with OpenStack as OpenFlow controller" href="using_with_openstack.html" />
+    <link rel="prev" title="Testing VRRP Module" href="test-vrrp.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>Testing OF-config support with LINC</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="test-vrrp.html">Testing VRRP Module</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="using_with_openstack.html">Using Ryu Network Operating System with OpenStack as OpenFlow controller</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="testing-of-config-support-with-linc">
+<h1>Testing OF-config support with LINC<a class="headerlink" href="#testing-of-config-support-with-linc" title="Permalink to this headline">¶</a></h1>
+<p>This page describes how to setup LINC and test Ryu OF-config with it.</p>
+<p>The procedure is as follows.
+Although all the procedure is written for reader&#8217;s convenience,
+please refer to LINC document for latest informations of LINC.</p>
+<blockquote>
+<div><a class="reference external" href="https://github.com/FlowForwarding/LINC-Switch">https://github.com/FlowForwarding/LINC-Switch</a></div></blockquote>
+<p>The test procedure</p>
+<ul class="simple">
+<li>install Erlang environment</li>
+<li>build LINC</li>
+<li>configure LINC switch</li>
+<li>setup for LINC</li>
+<li>run LINC switch</li>
+<li>run Ryu test_of_config app</li>
+</ul>
+<p>For getting/installing Ryu itself, please refer to <a class="reference external" href="http://osrg.github.io/ryu/">http://osrg.github.io/ryu/</a></p>
+<div class="section" id="install-erlang-environment">
+<h2>Install Erlang environment<a class="headerlink" href="#install-erlang-environment" title="Permalink to this headline">¶</a></h2>
+<p>Since LINC is written in Erlang, you need to install Erlang execution
+environment. Required version is R15B+.</p>
+<p>The easiest way is to use binary package from
+<a class="reference external" href="https://www.erlang-solutions.com/downloads/download-erlang-otp">https://www.erlang-solutions.com/downloads/download-erlang-otp</a></p>
+<p>The distribution may also provide Erlang package.</p>
+</div>
+<div class="section" id="build-linc">
+<h2>build LINC<a class="headerlink" href="#build-linc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="install-necessary-packages-for-build">
+<h3>install necessary packages for build<a class="headerlink" href="#install-necessary-packages-for-build" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="install-necessary-build-tools">
+<h4>install necessary build tools<a class="headerlink" href="#install-necessary-build-tools" title="Permalink to this headline">¶</a></h4>
+<p>On Ubuntu:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># apt-get install git-core bridge-utils libpcap0.8 libpcap-dev libcap2-bin uml-utilities</span>
+</pre></div>
+</div>
+<p>On RedHat/CentOS:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># yum install git sudo bridge-utils libpcap libpcap-devel libcap tunctl</span>
+</pre></div>
+</div>
+<p>Note that on RedHat/CentOS 5.x you need a newer version of libpcap:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># yum erase libpcap libpcap-devel</span>
+<span class="c"># yum install flex byacc</span>
+<span class="c"># wget http://www.tcpdump.org/release/libpcap-1.2.1.tar.gz</span>
+<span class="c"># tar xzf libpcap-1.2.1.tar.gz</span>
+<span class="c"># cd libpcap-1.2.1</span>
+<span class="c"># ./configure</span>
+<span class="c"># make &amp;&amp; make install</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-linc-repo-and-built">
+<h4>get LINC repo and built<a class="headerlink" href="#get-linc-repo-and-built" title="Permalink to this headline">¶</a></h4>
+<p>Clone LINC repo:</p>
+<div class="highlight-python"><div class="highlight"><pre>% git clone git://github.com/FlowForwarding/LINC-Switch.git
+</pre></div>
+</div>
+<p>Then compile everything:</p>
+<div class="highlight-python"><div class="highlight"><pre>% cd LINC-Switch
+% make
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>At the time of this writing, test_of_config fails due to a bug of LINC. You can try this test with LINC which is built by the following methods.</p>
+<div class="last highlight-python"><div class="highlight"><pre>% cd LINC-Switch
+% make
+% cd deps/of_config
+% git reset --hard f772af4b765984381ad024ca8e5b5b8c54362638
+% cd ../..
+% make offline
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="setup-linc">
+<h2>Setup LINC<a class="headerlink" href="#setup-linc" title="Permalink to this headline">¶</a></h2>
+<p>edit LINC switch configuration file. <code class="docutils literal"><span class="pre">rel/linc/releases/0.1/sys.config</span></code>
+Here is the sample sys.config for test_of_config.py to run.</p>
+<div class="highlight-python"><div class="highlight"><pre>[{linc,
+     [{of_config,enabled},
+      {capable_switch_ports,
+          [{port,1,[{interface,&quot;linc-port&quot;}]},
+           {port,2,[{interface,&quot;linc-port2&quot;}]},
+           {port,3,[{interface,&quot;linc-port3&quot;}]},
+           {port,4,[{interface,&quot;linc-port4&quot;}]}]},
+      {capable_switch_queues,
+          [
+            {queue,991,[{min_rate,10},{max_rate,120}]},
+            {queue,992,[{min_rate,10},{max_rate,130}]},
+            {queue,993,[{min_rate,200},{max_rate,300}]},
+            {queue,994,[{min_rate,400},{max_rate,900}]}
+            ]},
+      {logical_switches,
+          [{switch,0,
+               [{backend,linc_us4},
+                {controllers,[{&quot;Switch0-Default-Controller&quot;,&quot;127.0.0.1&quot;,6633,tcp}]},
+                {controllers_listener,{&quot;127.0.0.1&quot;,9998,tcp}},
+                {queues_status,enabled},
+                {ports,[{port,1,{queues,[]}},{port,2,{queues,[991,992]}}]}]}
+                ,
+           {switch,7,
+               [{backend,linc_us3},
+                {controllers,[{&quot;Switch7-Controller&quot;,&quot;127.0.0.1&quot;,6633,tcp}]},
+                {controllers_listener,disabled},
+                {queues_status,enabled},
+                {ports,[{port,4,{queues,[]}},{port,3,{queues,[993,994]}}]}]}
+        ]}]},
+ {enetconf,
+     [{capabilities,
+          [{base,{1,0}},
+           {base,{1,1}},
+           {startup,{1,0}},
+           {&#39;writable-running&#39;,{1,0}}]},
+      {callback_module,linc_ofconfig},
+      {sshd_ip,{127,0,0,1}},
+      {sshd_port,1830},
+      {sshd_user_passwords,[{&quot;linc&quot;,&quot;linc&quot;}]}]},
+ {lager,
+     [{handlers,
+          [{lager_console_backend,debug},
+           {lager_file_backend,
+               [{&quot;log/error.log&quot;,error,10485760,&quot;$D0&quot;,5},
+                {&quot;log/console.log&quot;,info,10485760,&quot;$D0&quot;,5}]}]}]},
+ {sasl,
+     [{sasl_error_logger,{file,&quot;log/sasl-error.log&quot;}},
+      {errlog_type,error},
+      {error_logger_mf_dir,&quot;log/sasl&quot;},
+      {error_logger_mf_maxbytes,10485760},
+      {error_logger_mf_maxfiles,5}]},
+ {sync,[{excluded_modules,[procket]}]}].
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup-for-linc">
+<h2>setup for LINC<a class="headerlink" href="#setup-for-linc" title="Permalink to this headline">¶</a></h2>
+<p>As the above sys.config requires some network interface, create them:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># ip link add linc-port type veth peer name linc-port-peer</span>
+<span class="c"># ip link set linc-port up</span>
+<span class="c"># ip link add linc-port2 type veth peer name linc-port-peer2</span>
+<span class="c"># ip link set linc-port2 up</span>
+<span class="c"># ip link add linc-port3 type veth peer name linc-port-peer3</span>
+<span class="c"># ip link set linc-port3 up</span>
+<span class="c"># ip link add linc-port4 type veth peer name linc-port-peer4</span>
+<span class="c"># ip link set linc-port4 up</span>
+</pre></div>
+</div>
+<p>After stopping LINC, those created interfaces can be deleted:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># ip link delete linc-port</span>
+<span class="c"># ip link delete linc-port2</span>
+<span class="c"># ip link delete linc-port3</span>
+<span class="c"># ip link delete linc-port4</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="starting-linc-openflow-switch">
+<h2>Starting LINC OpenFlow switch<a class="headerlink" href="#starting-linc-openflow-switch" title="Permalink to this headline">¶</a></h2>
+<p>Then run LINC:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># rel/linc/bin/linc console</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-ryu-test-of-config-app">
+<h2>Run Ryu test_of_config app<a class="headerlink" href="#run-ryu-test-of-config-app" title="Permalink to this headline">¶</a></h2>
+<p>Run test_of_config app:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># ryu-manager --verbose ryu.tests.integrated.test_of_config ryu.app.rest</span>
+</pre></div>
+</div>
+<p>If you don&#8217;t install ryu and are working in the git repo directly:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># PYTHONPATH=. ./bin/ryu-manager --verbose ryu.tests.integrated.test_of_config ryu.app.rest</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="test-vrrp.html">Testing VRRP Module</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="using_with_openstack.html">Using Ryu Network Operating System with OpenStack as OpenFlow controller</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

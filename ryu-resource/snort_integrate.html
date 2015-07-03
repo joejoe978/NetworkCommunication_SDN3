@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Snort Intergration &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>Snort Intergration</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="snort-intergration">
+<h1>Snort Intergration<a class="headerlink" href="#snort-intergration" title="Permalink to this headline">¶</a></h1>
+<p>This document describes how to integrate Ryu with Snort.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>There are two options can send alert to Ryu controller. The Option 1 is easier if you just want to demonstrate or test. Since Snort need very large computation power for analyzing packets you can choose Option 2 to separate them.</p>
+<p><strong>[Option 1] Ryu and Snort are on the same machine</strong></p>
+<div class="highlight-python"><div class="highlight"><pre>      +---------------------+
+      |      unixsock       |
+      |    Ryu  ==  snort   |
+      +----eth0-----eth1----+
+             |       |
++-------+   +----------+   +-------+
+| HostA |---| OFSwitch |---| HostB |
++-------+   +----------+   +-------+
+</pre></div>
+</div>
+<p>The above depicts Ryu and Snort architecture. Ryu receives Snort alert packet via <strong>Unix Domain Socket</strong> . To monitor packets between HostA and HostB, installing a flow that mirrors packets to Snort.</p>
+<p><strong>[Option 2] Ryu and Snort are on the different machines</strong></p>
+<div class="highlight-python"><div class="highlight"><pre>          +---------------+
+          |    Snort     eth0--|
+          |   Sniffer     |    |
+          +-----eth1------+    |
+                 |             |
++-------+   +----------+   +-----------+
+| HostA |---| OFSwitch |---| LAN (*CP) |
++-------+   +----------+   +-----------+
+                 |             |
+            +----------+   +----------+
+            |  HostB   |   |   Ryu    |
+            +----------+   +----------+
+</pre></div>
+</div>
+<p><strong>*CP: Control Plane</strong></p>
+<p>The above depicts Ryu and Snort architecture. Ryu receives Snort alert packet via <strong>Network Socket</strong> . To monitor packets between HostA and HostB, installing a flow that mirrors packets to Snort.</p>
+</div>
+<div class="section" id="installation-snort">
+<h2>Installation Snort<a class="headerlink" href="#installation-snort" title="Permalink to this headline">¶</a></h2>
+<p>Snort is an open source network intrusion prevention and detectionsystem developed by Sourcefire. If you are not familiar with installing/setting up Snort, please referto snort setup guides.</p>
+<p><a class="reference external" href="http://www.snort.org/docs">http://www.snort.org/docs</a></p>
+</div>
+<div class="section" id="configure-snort">
+<h2>Configure Snort<a class="headerlink" href="#configure-snort" title="Permalink to this headline">¶</a></h2>
+<p>The configuration example is below:</p>
+<ul>
+<li><p class="first">Add a snort rules file into <code class="docutils literal"><span class="pre">/etc/snort/rules</span></code> named <code class="docutils literal"><span class="pre">Myrules.rules</span></code></p>
+<div class="highlight-python"><div class="highlight"><pre>alert icmp any any -&gt; any any (msg:&quot;Pinging...&quot;;sid:1000004;)
+alert tcp any any -&gt; any 80 (msg:&quot;Port 80 is accessing&quot;; sid:1000003;)
+</pre></div>
+</div>
+</li>
+<li><p class="first">Add the custom rules in <code class="docutils literal"><span class="pre">/etc/snort/snort.conf</span></code></p>
+<div class="highlight-python"><div class="highlight"><pre>include $RULE_PATH/Myrules.rules
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Configure NIC as a promiscuous mode.</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo ifconfig eth1 promisc
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p><strong>[Option 1]</strong></p>
+<ol class="arabic">
+<li><p class="first">Modify the <code class="docutils literal"><span class="pre">simple_switch_snort.py</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">socket_config</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;unixsock&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+<span class="c"># True: Unix Domain Socket Server [Option1]</span>
+<span class="c"># False: Network Socket Server [Option2]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run Ryu with sample application:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo ./bin/ryu-manager ryu/app/simple_switch_snort.py
+</pre></div>
+</div>
+</li>
+</ol>
+<p>The incoming packets will all mirror to <strong>port 3</strong> which should be connect to Snort network interface. You can modify the mirror port by assign a new value in the <code class="docutils literal"><span class="pre">self.snort_port</span> <span class="pre">=</span> <span class="pre">3</span></code> of <code class="docutils literal"><span class="pre">simple_switch_snort.py</span></code></p>
+<ol class="arabic" start="3">
+<li><p class="first">Run Snort:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo -i
+$ snort -i eth1 -A unsock -l /tmp -c /etc/snort/snort.conf
+</pre></div>
+</div>
+</li>
+<li><p class="first">Send an ICMP packet from HostA (192.168.8.40) to HostB (192.168.8.50):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ping 192.168.8.50
+</pre></div>
+</div>
+</li>
+<li><p class="first">You can see the result under next section.</p>
+</li>
+</ol>
+<hr class="docutils" />
+<p><strong>[Option 2]</strong></p>
+<ol class="arabic">
+<li><p class="first">Modify the <code class="docutils literal"><span class="pre">simple_switch_snort.py</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">socket_config</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;unixsock&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>
+<span class="c"># True: Unix Domain Socket Server [Option1]</span>
+<span class="c"># False: Network Socket Server [Option2]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run Ryu with sample application (On the Controller):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ./bin/ryu-manager ryu/app/simple_switch_snort.py
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run Snort (On the Snort machine):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo -i
+$ snort -i eth1 -A unsock -l /tmp -c /etc/snort/snort.conf
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run <code class="docutils literal"><span class="pre">pigrelay.py</span></code> (On the Snort machine):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo python pigrelay.py
+</pre></div>
+</div>
+</li>
+</ol>
+<p>This program listening snort alert messages from unix domain socket and sending it to Ryu using network socket.</p>
+<p>You can clone the source code from this repo. <a class="reference external" href="https://github.com/John-Lin/pigrelay">https://github.com/John-Lin/pigrelay</a></p>
+<ol class="arabic" start="5">
+<li><p class="first">Send an ICMP packet from HostA (192.168.8.40) to HostB (192.168.8.50):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ping 192.168.8.50
+</pre></div>
+</div>
+</li>
+<li><p class="first">You can see the alert message below:</p>
+<div class="highlight-python"><div class="highlight"><pre>alertmsg: Pinging...
+icmp(code=0,csum=19725,data=echo(data=array(&#39;B&#39;, [97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 97, 98, 99, 100, 101, 102, 103, 104, 105]),id=1,seq=78),type=8)
+
+ipv4(csum=42562,dst=&#39;192.168.8.50&#39;,flags=0,header_length=5,identification=724,offset=0,option=None,proto=1,src=&#39;192.168.8.40&#39;,tos=0,total_length=60,ttl=128,version=4)
+
+ethernet(dst=&#39;00:23:54:5a:05:14&#39;,ethertype=2048,src=&#39;00:23:54:6c:1d:17&#39;)
+
+
+alertmsg: Pinging...
+icmp(code=0,csum=21773,data=echo(data=array(&#39;B&#39;, [97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 97, 98, 99, 100, 101, 102, 103, 104, 105]),id=1,seq=78),type=0)
+
+ipv4(csum=52095,dst=&#39;192.168.8.40&#39;,flags=0,header_length=5,identification=7575,offset=0,option=None,proto=1,src=&#39;192.168.8.50&#39;,tos=0,total_length=60,ttl=64,version=4)
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

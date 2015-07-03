@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Topology Viewer &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="index.html" />
+    <link rel="up" title="Configuration" href="configuration.html" />
+    <link rel="next" title="Tests" href="tests.html" />
+    <link rel="prev" title="Setup TLS Connection" href="tls.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>Topology Viewer</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="tls.html">Setup TLS Connection</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="tests.html">Tests</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="topology-viewer">
+<h1>Topology Viewer<a class="headerlink" href="#topology-viewer" title="Permalink to this headline">¶</a></h1>
+<p>ryu.app.gui_topology.gui_topology provides topology visualization.</p>
+<p>This depends on following ryu applications.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="70%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>ryu.app.rest_topology</td>
+<td>Get node and link data.</td>
+</tr>
+<tr class="row-even"><td>ryu.app.ws_topology</td>
+<td>Being notified change of link up/down.</td>
+</tr>
+<tr class="row-odd"><td>ryu.app.ofctl_rest</td>
+<td>Get flows of datapaths.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>Run mininet (or join your real environment):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo mn --controller remote --topo tree,depth=3
+</pre></div>
+</div>
+<p>Run GUI application:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ PYTHONPATH=. ./bin/ryu run --observe-links ryu/app/gui_topology/gui_topology.py
+</pre></div>
+</div>
+<p>Access <a class="reference external" href="http:/">http:/</a>/&lt;ip address of ryu host&gt;:8080 with your web browser.</p>
+</div>
+<div class="section" id="screenshot">
+<h2>Screenshot<a class="headerlink" href="#screenshot" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/gui.png"><img alt="_images/gui.png" src="_images/gui.png" style="width: 640px;" /></a>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="tls.html">Setup TLS Connection</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="tests.html">Tests</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

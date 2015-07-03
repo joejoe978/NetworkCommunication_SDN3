@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="index.html" />
+    <link rel="next" title="Writing Your Ryu Application" href="developing.html" />
+    <link rel="prev" title="Welcome to RYU the Network Operating System(NOS)" href="index.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>Getting Started</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="index.html">Welcome to RYU the Network Operating System(NOS)</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="developing.html">Writing Your Ryu Application</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-s-ryu">
+<h2>What&#8217;s Ryu<a class="headerlink" href="#what-s-ryu" title="Permalink to this headline">¶</a></h2>
+<p>Ryu is a component-based software defined networking framework.</p>
+<p>Ryu provides software components with well defined API that make it
+easy for developers to create new network management and control
+applications. Ryu supports various protocols for managing network
+devices, such as OpenFlow, Netconf, OF-config, etc. About OpenFlow,
+Ryu supports fully 1.0, 1.2, 1.3, 1.4 and Nicira Extensions.</p>
+<p>All of the code is freely available under the Apache 2.0 license. Ryu
+is fully written in Python.</p>
+</div>
+<div class="section" id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<p>Installing Ryu is quite easy:</p>
+<div class="highlight-python"><div class="highlight"><pre>% pip install ryu
+</pre></div>
+</div>
+<p>If you prefer to install Ryu from the source code:</p>
+<div class="highlight-python"><div class="highlight"><pre>% git clone git://github.com/osrg/ryu.git
+% cd ryu; python ./setup.py install
+</pre></div>
+</div>
+<p>If you want to use Ryu with <a class="reference external" href="http://openstack.org/">OpenStack</a>,
+please refer <a class="reference external" href="https://github.com/stackforge/networking-ofagent">networking-ofagent project</a>.</p>
+<p>If you want to write your Ryu application, have a look at
+<a class="reference external" href="http://ryu.readthedocs.org/en/latest/writing_ryu_app.html">Writing ryu application</a> document.
+After writing your application, just type:</p>
+<div class="highlight-python"><div class="highlight"><pre>% ryu-manager yourapp.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="optional-requirements">
+<h2>Optional Requirements<a class="headerlink" href="#optional-requirements" title="Permalink to this headline">¶</a></h2>
+<p>Some functionalities of ryu requires extra packages:</p>
+<ul class="simple">
+<li>OF-Config requires lxml</li>
+<li>NETCONF requires paramiko</li>
+<li>BGP speaker (net_cntl) requires paramiko</li>
+</ul>
+<p>If you want to use the functionalities, please install requirements:</p>
+<div class="highlight-python"><div class="highlight"><pre>% pip install lxml
+% pip install paramiko
+</pre></div>
+</div>
+</div>
+<div class="section" id="support">
+<h2>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h2>
+<p>Ryu Official site is <a class="reference external" href="http://osrg.github.io/ryu/">http://osrg.github.io/ryu/</a>.</p>
+<p>If you have any
+questions, suggestions, and patches, the mailing list is available at
+<a class="reference external" href="https://lists.sourceforge.net/lists/listinfo/ryu-devel">ryu-devel ML</a>.
+<a class="reference external" href="http://dir.gmane.org/gmane.network.ryu.devel">The ML archive at Gmane</a>
+is also available.</p>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="index.html">Welcome to RYU the Network Operating System(NOS)</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="developing.html">Writing Your Ryu Application</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

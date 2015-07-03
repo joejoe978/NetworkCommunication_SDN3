@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenFlow version independent classes and functions &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="index.html" />
+    <link rel="up" title="OpenFlow protocol API Reference" href="ofproto_ref.html" />
+    <link rel="next" title="OpenFlow v1.2 Messages and Structures" href="ofproto_v1_2_ref.html" />
+    <link rel="prev" title="OpenFlow protocol API Reference" href="ofproto_ref.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>OpenFlow version independent classes and functions</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="ofproto_ref.html">OpenFlow protocol API Reference</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ofproto_v1_2_ref.html">OpenFlow v1.2 Messages and Structures</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="openflow-version-independent-classes-and-functions">
+<h1>OpenFlow version independent classes and functions<a class="headerlink" href="#openflow-version-independent-classes-and-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="base-class-for-openflow-messages">
+<h2>Base class for OpenFlow messages<a class="headerlink" href="#base-class-for-openflow-messages" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ryu.ofproto.ofproto_parser.MsgBase">
+<em class="property">class </em><code class="descclassname">ryu.ofproto.ofproto_parser.</code><code class="descname">MsgBase</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.ofproto.ofproto_parser.MsgBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a base class for OpenFlow message classes.</p>
+<p>An instance of this class has at least the following attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>datapath</td>
+<td>A ryu.controller.controller.Datapath instance for this message</td>
+</tr>
+<tr class="row-odd"><td>version</td>
+<td>OpenFlow protocol version</td>
+</tr>
+<tr class="row-even"><td>msg_type</td>
+<td>Type of OpenFlow message</td>
+</tr>
+<tr class="row-odd"><td>msg_len</td>
+<td>Length of the message</td>
+</tr>
+<tr class="row-even"><td>xid</td>
+<td>Transaction id</td>
+</tr>
+<tr class="row-odd"><td>buf</td>
+<td>Raw data</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="ryu.ofproto.ofproto_parser.MsgBase._TYPE">
+<code class="descname">_TYPE</code><a class="headerlink" href="#ryu.ofproto.ofproto_parser.MsgBase._TYPE" title="Permalink to this definition">¶</a></dt>
+<dd><p>_TYPE class attribute is used to annotate types of attributes.</p>
+<p>This type information is used to find an appropriate conversion for
+a JSON style dictionary.</p>
+<p>Currently the following types are implemented.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Type</th>
+<th class="head">Descrption</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>ascii</td>
+<td>US-ASCII</td>
+</tr>
+<tr class="row-odd"><td>utf-8</td>
+<td>UTF-8</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;ascii&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">&#39;hw_addr&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s">&#39;utf-8&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">&#39;name&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.ofproto.ofproto_parser.MsgBase.from_jsondict">
+<code class="descname">from_jsondict</code><span class="sig-paren">(</span><em>dict_</em>, <em>decode_string=&lt;function b64decode&gt;</em>, <em>**additional_args</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.ofproto.ofproto_parser.MsgBase.from_jsondict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance from a JSON style dict.</p>
+<p>Instantiate this class with parameters specified by the dict.</p>
+<p>This method takes the following arguments.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Argument</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dict_</td>
+<td>A dictionary which describes the parameters.
+For example, {&#8220;Param1&#8221;: 100, &#8220;Param2&#8221;: 200}</td>
+</tr>
+<tr class="row-odd"><td>decode_string</td>
+<td>(Optional) specify how to decode strings.
+The default is base64.
+This argument is used only for attributes which don&#8217;t
+have explicit type annotations in _TYPE class
+attribute.</td>
+</tr>
+<tr class="row-even"><td>additional_args</td>
+<td>(Optional) Additional kwargs for constructor.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ryu.ofproto.ofproto_parser.MsgBase.to_jsondict">
+<code class="descname">to_jsondict</code><span class="sig-paren">(</span><em>encode_string=&lt;function b64encode&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.ofproto.ofproto_parser.MsgBase.to_jsondict" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns a JSON style dict to describe this object.</p>
+<p>The returned dict is compatible with json.dumps() and json.loads().</p>
+<p>Suppose ClassName object inherits StringifyMixin.
+For an object like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ClassName</span><span class="p">(</span><span class="n">Param1</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Param2</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>this method would produce:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span> <span class="s">&quot;ClassName&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s">&quot;Param1&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s">&quot;Param2&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>This method takes the following arguments.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Argument</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>encode_string</td>
+<td>(Optional) specify how to encode attributes which has
+python &#8216;str&#8217; type.
+The default is base64.
+This argument is used only for attributes which don&#8217;t
+have explicit type annotations in _TYPE class attribute.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ryu.ofproto.ofproto_parser.ofp_msg_from_jsondict">
+<code class="descclassname">ryu.ofproto.ofproto_parser.</code><code class="descname">ofp_msg_from_jsondict</code><span class="sig-paren">(</span><em>dp</em>, <em>jsondict</em><span class="sig-paren">)</span><a class="headerlink" href="#ryu.ofproto.ofproto_parser.ofp_msg_from_jsondict" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function instanticates an appropriate OpenFlow message class
+from the given JSON style dictionary.
+The objects created by following two code fragments are equivalent.</p>
+<p>Code A:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">jsonstr</span> <span class="o">=</span> <span class="s">&#39;{ &quot;OFPSetConfig&quot;: { &quot;flags&quot;: 0, &quot;miss_send_len&quot;: 128 } }&#39;</span>
+<span class="n">jsondict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">jsonstr</span><span class="p">)</span>
+<span class="n">o</span> <span class="o">=</span> <span class="n">ofp_msg_from_jsondict</span><span class="p">(</span><span class="n">dp</span><span class="p">,</span> <span class="n">jsondict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Code B:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">o</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ofproto_parser</span><span class="o">.</span><span class="n">OFPSetConfig</span><span class="p">(</span><span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">miss_send_len</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function takes the following arguments.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Argument</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dp</td>
+<td>An instance of ryu.controller.Datapath.</td>
+</tr>
+<tr class="row-odd"><td>jsondict</td>
+<td>A JSON style dict.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="ofproto_ref.html">OpenFlow protocol API Reference</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="ofproto_v1_2_ref.html">OpenFlow v1.2 Messages and Structures</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

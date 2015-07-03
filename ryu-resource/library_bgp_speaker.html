@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BGP speaker library &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="index.html" />
+    <link rel="up" title="Library" href="library.html" />
+    <link rel="next" title="BGP speaker library API Reference" href="library_bgp_speaker_ref.html" />
+    <link rel="prev" title="OF-Config support" href="library_of_config.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>BGP speaker library</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="library_of_config.html">OF-Config support</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="library_bgp_speaker_ref.html">BGP speaker library API Reference</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="bgp-speaker-library">
+<h1>BGP speaker library<a class="headerlink" href="#bgp-speaker-library" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Ryu BGP speaker library helps you to enable your code to speak BGP
+protocol. The library supports ipv4, ipv4 vpn, and ipv6 vpn address
+families.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>The following simple code creates a BGP instance with AS number 64512
+and Router ID 10.0.0.1. It tries to establish a bgp session with a
+peer (its IP is 192.168.177.32 and the AS number is 64513). The
+instance advertizes some prefixes.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">eventlet</span>
+
+<span class="c"># BGPSpeaker needs sockets patched</span>
+<span class="n">eventlet</span><span class="o">.</span><span class="n">monkey_patch</span><span class="p">()</span>
+
+<span class="c"># initialize a log handler</span>
+<span class="c"># this is not strictly necessary but useful if you get messages like:</span>
+<span class="c">#    No handlers could be found for logger &quot;ryu.lib.hub&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+<span class="n">log</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">))</span>
+
+<span class="kn">from</span> <span class="nn">ryu.services.protocols.bgp.bgpspeaker</span> <span class="kn">import</span> <span class="n">BGPSpeaker</span>
+
+<span class="k">def</span> <span class="nf">dump_remote_best_path_change</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&#39;the best path changed:&#39;</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">remote_as</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span>\
+        <span class="n">event</span><span class="o">.</span><span class="n">nexthop</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">is_withdraw</span>
+
+<span class="k">def</span> <span class="nf">detect_peer_down</span><span class="p">(</span><span class="n">remote_ip</span><span class="p">,</span> <span class="n">remote_as</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&#39;Peer down:&#39;</span><span class="p">,</span> <span class="n">remote_ip</span><span class="p">,</span> <span class="n">remote_as</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">speaker</span> <span class="o">=</span> <span class="n">BGPSpeaker</span><span class="p">(</span><span class="n">as_number</span><span class="o">=</span><span class="mi">64512</span><span class="p">,</span> <span class="n">router_id</span><span class="o">=</span><span class="s">&#39;10.0.0.1&#39;</span><span class="p">,</span>
+                         <span class="n">best_path_change_handler</span><span class="o">=</span><span class="n">dump_remote_best_path_change</span><span class="p">,</span>
+                         <span class="n">peer_down_handler</span><span class="o">=</span><span class="n">detect_peer_down</span><span class="p">)</span>
+
+    <span class="n">speaker</span><span class="o">.</span><span class="n">neighbor_add</span><span class="p">(</span><span class="s">&#39;192.168.177.32&#39;</span><span class="p">,</span> <span class="mi">64513</span><span class="p">)</span>
+    <span class="c"># uncomment the below line if the speaker needs to talk with a bmp server.</span>
+    <span class="c"># speaker.bmp_server_add(&#39;192.168.177.2&#39;, 11019)</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">eventlet</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s">&#39;10.20.&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;.0/24&#39;</span>
+        <span class="k">print</span> <span class="s">&quot;add a new prefix&quot;</span><span class="p">,</span> <span class="n">prefix</span>
+        <span class="n">speaker</span><span class="o">.</span><span class="n">prefix_add</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">speaker</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+            <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="library_of_config.html">OF-Config support</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="library_bgp_speaker_ref.html">BGP speaker library API Reference</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,3579 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ryu.app.ofctl_rest &mdash; Ryu 3.20 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.20',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Ryu 3.20 documentation" href="../index.html" />
+    <link rel="up" title="Built-in Ryu applications" href="../app.html" />
+    <link rel="prev" title="ryu.app.ofctl" href="ofctl.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>Ryu 3.20 documentation</span></a></h1>
+        <h2 class="heading"><span>ryu.app.ofctl_rest</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="ofctl.html">ryu.app.ofctl</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="ryu-app-ofctl-rest">
+<h1>ryu.app.ofctl_rest<a class="headerlink" href="#ryu-app-ofctl-rest" title="Permalink to this headline">¶</a></h1>
+<p>ryu.app.ofctl_rest provides REST APIs for retrieving the switch stats
+and Updating the switch stats.
+This application helps you debug your application and get various statistics.</p>
+<p>This application supports OpenFlow version 1.0, 1.2 and 1.3.</p>
+<div class="section" id="retrieve-the-switch-stats">
+<h2>Retrieve the switch stats<a class="headerlink" href="#retrieve-the-switch-stats" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="get-all-switches">
+<h3>Get all switches<a class="headerlink" href="#get-all-switches" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get the list of all switches which connected to the controller.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="70%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/switches</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="51%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/switches
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span>
+  <span class="mi">1</span><span class="p">,</span>
+  <span class="mi">2</span><span class="p">,</span>
+  <span class="mi">3</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The result of the REST command is formatted for easy viewing.</p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-the-desc-stats">
+<h3>Get the desc stats<a class="headerlink" href="#get-the-desc-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get the desc stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/desc/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="59%" />
+<col width="24%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>mfr_desc</td>
+<td>Manufacturer description</td>
+<td>&#8220;Nicira, Inc.&#8221;,</td>
+</tr>
+<tr class="row-even"><td>hw_desc</td>
+<td>Hardware description</td>
+<td>&#8220;Open vSwitch&#8221;,</td>
+</tr>
+<tr class="row-odd"><td>sw_desc</td>
+<td>Software description</td>
+<td>&#8220;2.3.90&#8221;,</td>
+</tr>
+<tr class="row-even"><td>serial_num</td>
+<td>Serial number</td>
+<td>&#8220;None&#8221;,</td>
+</tr>
+<tr class="row-odd"><td>dp_desc</td>
+<td>Human readable description of datapath</td>
+<td>&#8220;None&#8221;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/desc/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;mfr_desc&quot;</span><span class="p">:</span> <span class="s">&quot;Nicira, Inc.&quot;</span><span class="p">,</span>
+    <span class="s">&quot;hw_desc&quot;</span><span class="p">:</span> <span class="s">&quot;Open vSwitch&quot;</span><span class="p">,</span>
+    <span class="s">&quot;sw_desc&quot;</span><span class="p">:</span> <span class="s">&quot;2.3.90&quot;</span><span class="p">,</span>
+    <span class="s">&quot;serial_num&quot;</span><span class="p">:</span> <span class="s">&quot;None&quot;</span><span class="p">,</span>
+    <span class="s">&quot;dp_desc&quot;</span><span class="p">:</span> <span class="s">&quot;None&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-all-flows-stats">
+<span id="id1"></span><h3>Get all flows stats<a class="headerlink" href="#get-all-flows-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get all flows stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/flow/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="67%" />
+<col width="17%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>length</td>
+<td>Length of this entry</td>
+<td>88</td>
+</tr>
+<tr class="row-even"><td>table_id</td>
+<td>Table ID</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>duration_sec</td>
+<td>Time flow has been alive in seconds</td>
+<td>2</td>
+</tr>
+<tr class="row-even"><td>duration_nsec</td>
+<td>Time flow has been alive in nanoseconds beyond duration_sec</td>
+<td>6.76e+08</td>
+</tr>
+<tr class="row-odd"><td>priority</td>
+<td>Priority of the entry</td>
+<td>11111</td>
+</tr>
+<tr class="row-even"><td>idle_timeout</td>
+<td>Number of seconds idle before expiration</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>hard_timeout</td>
+<td>Number of seconds before expiration</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>flags</td>
+<td>Bitmap of OFPFF_* flags</td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td>cookie</td>
+<td>Opaque controller-issued identifier</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>packet_count</td>
+<td>Number of packets in flow</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>byte_count</td>
+<td>Number of bytes in flow</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>match</td>
+<td>Fields to match</td>
+<td>{&#8220;in_port&#8221;: 1}</td>
+</tr>
+<tr class="row-odd"><td>actions</td>
+<td>Instruction set</td>
+<td>[&#8220;OUTPUT:2&#8221;]</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/flow/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;length&quot;</span><span class="p">:</span> <span class="mi">88</span><span class="p">,</span>
+      <span class="s">&quot;table_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;duration_sec&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="s">&quot;duration_nsec&quot;</span><span class="p">:</span> <span class="mf">6.76e+08</span><span class="p">,</span>
+      <span class="s">&quot;priority&quot;</span><span class="p">:</span> <span class="mi">11111</span><span class="p">,</span>
+      <span class="s">&quot;idle_timeout&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;hard_timeout&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;flags&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;cookie&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;packet_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;byte_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;match&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;in_port&quot;</span><span class="p">:</span> <span class="mi">1</span>
+      <span class="p">},</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">&quot;OUTPUT:2&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-flows-stats-filtered-by-fields">
+<span id="get-flows-stats-filtered"></span><h3>Get flows stats filtered by fields<a class="headerlink" href="#get-flows-stats-filtered-by-fields" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get flows stats of the switch filtered by the OFPFlowStats fields.
+This is POST method version of <a class="reference internal" href="#get-all-flows-stats"><span>Get all flows stats</span></a>.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/flow/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="61%" />
+<col width="14%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>table_id</td>
+<td>Table ID (int)</td>
+<td>0</td>
+<td>OFPTT_ALL</td>
+</tr>
+<tr class="row-odd"><td>out_port</td>
+<td>Require matching entries to include this as an output port (int)</td>
+<td>2</td>
+<td>OFPP_ANY</td>
+</tr>
+<tr class="row-even"><td>out_group</td>
+<td>Require matching entries to include this as an output group (int)</td>
+<td>1</td>
+<td>OFPG_ANY</td>
+</tr>
+<tr class="row-odd"><td>cookie</td>
+<td>Require matching entries to contain this cookie value (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>cookie_mask</td>
+<td>Mask used to restrict the cookie bits that must match (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>match</td>
+<td>Fields to match (dict)</td>
+<td>{&#8220;in_port&#8221;: 1}</td>
+<td>{} #wildcarded</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<dl class="docutils">
+<dt>Response message body:</dt>
+<dd>The same as <a class="reference internal" href="#get-all-flows-stats"><span>Get all flows stats</span></a></dd>
+</dl>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+     &quot;table_id&quot;: 0,
+     &quot;out_port&quot;: 2,
+     &quot;cookie&quot;: 1,
+     &quot;cookie_mask&quot;: 1,
+     &quot;match&quot;:{
+         &quot;in_port&quot;:1
+     }
+ }&#39; http://localhost:8080/stats/flow/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;table_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;duration_sec&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="s">&quot;duration_nsec&quot;</span><span class="p">:</span> <span class="mf">6.76e+08</span><span class="p">,</span>
+      <span class="s">&quot;priority&quot;</span><span class="p">:</span> <span class="mi">11111</span><span class="p">,</span>
+      <span class="s">&quot;idle_timeout&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;hard_timeout&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;cookie&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;packet_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;byte_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;match&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;in_port&quot;</span><span class="p">:</span> <span class="mi">1</span>
+      <span class="p">},</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">&quot;OUTPUT:2&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-aggregate-flow-stats">
+<span id="id2"></span><h3>Get aggregate flow stats<a class="headerlink" href="#get-aggregate-flow-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get aggregate flow stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/aggregateflow/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="56%" />
+<col width="17%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>packet_count</td>
+<td>Number of packets in flows</td>
+<td>18</td>
+</tr>
+<tr class="row-even"><td>byte_count</td>
+<td>Number of bytes in flows</td>
+<td>756</td>
+</tr>
+<tr class="row-odd"><td>flow_count</td>
+<td>Number of flows</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/aggregateflow/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;packet_count&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+      <span class="s">&quot;byte_count&quot;</span><span class="p">:</span> <span class="mi">756</span><span class="p">,</span>
+      <span class="s">&quot;flow_count&quot;</span><span class="p">:</span> <span class="mi">3</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-aggregate-flow-stats-filtered-by-fields">
+<h3>Get aggregate flow stats filtered by fields<a class="headerlink" href="#get-aggregate-flow-stats-filtered-by-fields" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get aggregate flow stats of the switch filtered by the OFPAggregateStats fields.
+This is POST method version of <a class="reference internal" href="#get-aggregate-flow-stats"><span>Get aggregate flow stats</span></a>.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/aggregateflow/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="61%" />
+<col width="14%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>table_id</td>
+<td>Table ID (int)</td>
+<td>0</td>
+<td>OFPTT_ALL</td>
+</tr>
+<tr class="row-odd"><td>out_port</td>
+<td>Require matching entries to include this as an output port (int)</td>
+<td>2</td>
+<td>OFPP_ANY</td>
+</tr>
+<tr class="row-even"><td>out_group</td>
+<td>Require matching entries to include this as an output group (int)</td>
+<td>1</td>
+<td>OFPG_ANY</td>
+</tr>
+<tr class="row-odd"><td>cookie</td>
+<td>Require matching entries to contain this cookie value (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>cookie_mask</td>
+<td>Mask used to restrict the cookie bits that must match (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>match</td>
+<td>Fields to match (dict)</td>
+<td>{&#8220;in_port&#8221;: 1}</td>
+<td>{} #wildcarded</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<dl class="docutils">
+<dt>Response message body:</dt>
+<dd>The same as <a class="reference internal" href="#get-aggregate-flow-stats"><span>Get aggregate flow stats</span></a></dd>
+</dl>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+     &quot;table_id&quot;: 0,
+     &quot;out_port&quot;: 2,
+     &quot;cookie&quot;: 1,
+     &quot;cookie_mask&quot;: 1,
+     &quot;match&quot;:{
+         &quot;in_port&quot;:1
+     }
+ }&#39; http://localhost:8080/stats/aggregateflow/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;packet_count&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+      <span class="s">&quot;byte_count&quot;</span><span class="p">:</span> <span class="mi">756</span><span class="p">,</span>
+      <span class="s">&quot;flow_count&quot;</span><span class="p">:</span> <span class="mi">3</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-ports-stats">
+<h3>Get ports stats<a class="headerlink" href="#get-ports-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get ports stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/port/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="72%" />
+<col width="11%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>port_no</td>
+<td>Port number</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>rx_packets</td>
+<td>Number of received packets</td>
+<td>9</td>
+</tr>
+<tr class="row-odd"><td>tx_packets</td>
+<td>Number of transmitted packets</td>
+<td>6</td>
+</tr>
+<tr class="row-even"><td>rx_bytes</td>
+<td>Number of received bytes</td>
+<td>738</td>
+</tr>
+<tr class="row-odd"><td>tx_bytes</td>
+<td>Number of transmitted bytes</td>
+<td>252</td>
+</tr>
+<tr class="row-even"><td>rx_dropped</td>
+<td>Number of packets dropped by RX</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>tx_dropped</td>
+<td>Number of packets dropped by TX</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>rx_errors</td>
+<td>Number of receive errors</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>tx_errors</td>
+<td>Number of transmit errors</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>rx_frame_err</td>
+<td>Number of frame alignment errors</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>rx_over_err</td>
+<td>Number of packets with RX overrun</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>rx_crc_err</td>
+<td>Number of CRC errors</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>collisions</td>
+<td>Number of collisions</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>duration_sec</td>
+<td>Time port has been alive in seconds</td>
+<td>12</td>
+</tr>
+<tr class="row-odd"><td>duration_nsec</td>
+<td>Time port has been alive in nanoseconds beyond duration_sec</td>
+<td>9.76e+08</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/port/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>{
+  &quot;1&quot;: [
+    {
+      &quot;port_no&quot;: 1,
+      &quot;rx_packets&quot;: 9,
+      &quot;tx_packets&quot;: 6,
+      &quot;rx_bytes&quot;: 738,
+      &quot;tx_bytes&quot;: 252,
+      &quot;rx_dropped&quot;: 0,
+      &quot;tx_dropped&quot;: 0,
+      &quot;rx_errors&quot;: 0,
+      &quot;tx_errors&quot;: 0,
+      &quot;rx_frame_err&quot;: 0,
+      &quot;rx_over_err&quot;: 0,
+      &quot;rx_crc_err&quot;: 0,
+      &quot;collisions&quot;: 0,
+      &quot;duration_sec&quot;: 12,
+      &quot;duration_nsec&quot;: 9.76e+08
+    },
+    {
+      :
+      :
+    }
+  ]
+}
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-ports-description">
+<span id="id3"></span><h3>Get ports description<a class="headerlink" href="#get-ports-description" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get ports description of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/portdesc/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="53%" />
+<col width="28%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>port_no</td>
+<td>Port number</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>hw_addr</td>
+<td>Ethernet hardware address</td>
+<td>&#8220;0a:b6:d0:0c:e1:d7&#8221;</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Name of port</td>
+<td>&#8220;s1-eth1&#8221;</td>
+</tr>
+<tr class="row-even"><td>config</td>
+<td>Bitmap of OFPPC_* flags</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>state</td>
+<td>Bitmap of OFPPS_* flags</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>curr</td>
+<td>Current features</td>
+<td>2112</td>
+</tr>
+<tr class="row-odd"><td>advertised</td>
+<td>Features being advertised by the port</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>supported</td>
+<td>Features supported by the port</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>peer</td>
+<td>Features advertised by peer</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>curr_speed</td>
+<td>Current port bitrate in kbps</td>
+<td>1e+07</td>
+</tr>
+<tr class="row-odd"><td>max_speed</td>
+<td>Max port bitrate in kbps</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/portdesc/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>{
+  &quot;1&quot;: [
+    {
+      &quot;port_no&quot;: 1,
+      &quot;hw_addr&quot;: &quot;0a:b6:d0:0c:e1:d7&quot;,
+      &quot;name&quot;: &quot;s1-eth1&quot;,
+      &quot;config&quot;: 0,
+      &quot;state&quot;: 0,
+      &quot;curr&quot;: 2112,
+      &quot;advertised&quot;: 0,
+      &quot;supported&quot;: 0,
+      &quot;peer&quot;: 0,
+      &quot;curr_speed&quot;: 1e+07,
+      &quot;max_speed&quot;: 0
+    },
+    {
+      :
+      :
+    }
+  ]
+}
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-queues-stats">
+<h3>Get queues stats<a class="headerlink" href="#get-queues-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get queues stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="74%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/queue/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="71%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>port_no</td>
+<td>Port number</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>queue_id</td>
+<td>Queue ID</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>tx_bytes</td>
+<td>Number of transmitted bytes</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>tx_packets</td>
+<td>Number of transmitted packets</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>tx_errors</td>
+<td>Number of packets dropped due to overrun</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>duration_sec</td>
+<td>Time queue has been alive in seconds</td>
+<td>4294963425</td>
+</tr>
+<tr class="row-odd"><td>duration_nsec</td>
+<td>Time queue has been alive in nanoseconds beyond duration_sec</td>
+<td>3912967296</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/queue/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;port_no&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;queue_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;tx_bytes&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;tx_packets&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;tx_errors&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;duration_sec&quot;</span><span class="p">:</span> <span class="mi">4294963425</span><span class="p">,</span>
+      <span class="s">&quot;duration_nsec&quot;</span><span class="p">:</span> <span class="mi">3912967296</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s">&quot;port_no&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;queue_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;tx_bytes&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;tx_packets&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;tx_errors&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;duration_sec&quot;</span><span class="p">:</span> <span class="mi">4294963425</span><span class="p">,</span>
+      <span class="s">&quot;duration_nsec&quot;</span><span class="p">:</span> <span class="mi">3912967296</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-groups-stats">
+<h3>Get groups stats<a class="headerlink" href="#get-groups-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get groups stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="74%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/group/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="71%" />
+<col width="10%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>length</td>
+<td>Length of this entry</td>
+<td>56</td>
+</tr>
+<tr class="row-even"><td>group_id</td>
+<td>Group ID</td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td>ref_count</td>
+<td>Number of flows or groups that directly forward to this group</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>packet_count</td>
+<td>Number of packets processed by group</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>byte_count</td>
+<td>Number of bytes processed by group</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>duration_sec</td>
+<td>Time group has been alive in seconds</td>
+<td>161</td>
+</tr>
+<tr class="row-odd"><td>duration_nsec</td>
+<td>Time group has been alive in nanoseconds beyond duration_sec</td>
+<td>3.03e+08</td>
+</tr>
+<tr class="row-even"><td>bucket_stats</td>
+<td>struct ofp_bucket_counter</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>&#8211; packet_count</td>
+<td>Number of packets processed by bucket</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>&#8211; byte_count</td>
+<td>Number of bytes processed by bucket</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/group/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;length&quot;</span><span class="p">:</span> <span class="mi">56</span><span class="p">,</span>
+      <span class="s">&quot;group_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;ref_count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;packet_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;byte_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;duration_sec&quot;</span><span class="p">:</span> <span class="mi">161</span><span class="p">,</span>
+      <span class="s">&quot;duration_nsec&quot;</span><span class="p">:</span> <span class="mf">3.03e+08</span><span class="p">,</span>
+      <span class="s">&quot;bucket_stats&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s">&quot;packet_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="s">&quot;byte_count&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-group-description-stats">
+<span id="id4"></span><h3>Get group description stats<a class="headerlink" href="#get-group-description-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get group description stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/groupdesc/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="66%" />
+<col width="16%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>One of OFPGT_*</td>
+<td>&#8220;ALL&#8221;</td>
+</tr>
+<tr class="row-even"><td>group_id</td>
+<td>Group ID</td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td>buckets</td>
+<td>struct ofp_bucket</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>&#8211; weight</td>
+<td>Relative weight of bucket
+(Only defined for select groups)</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>&#8211; watch_port</td>
+<td>Port whose state affects whether this bucket is live
+(Only required for fast failover groups)</td>
+<td>4294967295</td>
+</tr>
+<tr class="row-even"><td>&#8211; watch_group</td>
+<td>Group whose state affects whether this bucket is live
+(Only required for fast failover groups)</td>
+<td>4294967295</td>
+</tr>
+<tr class="row-odd"><td>&#8211; actions</td>
+<td>0 or more actions associated with the bucket</td>
+<td>[&#8220;OUTPUT:1&#8221;]</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/groupdesc/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;ALL&quot;</span><span class="p">,</span>
+      <span class="s">&quot;group_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;buckets&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s">&quot;weight&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="s">&quot;watch_port&quot;</span><span class="p">:</span> <span class="mi">4294967295</span><span class="p">,</span>
+          <span class="s">&quot;watch_group&quot;</span><span class="p">:</span> <span class="mi">4294967295</span><span class="p">,</span>
+          <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s">&quot;OUTPUT:1&quot;</span>
+          <span class="p">]</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-group-features-stats">
+<h3>Get group features stats<a class="headerlink" href="#get-group-features-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get group features stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/groupfeatures/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="41%" />
+<col width="45%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>types</td>
+<td>Bitmap of (1 &lt;&lt; OFPGT_*) values supported</td>
+<td>[]</td>
+</tr>
+<tr class="row-even"><td>capabilities</td>
+<td>Bitmap of OFPGFC_* capability supported</td>
+<td>[&#8220;SELECT_WEIGHT&#8221;,&#8221;SELECT_LIVENESS&#8221;,&#8221;CHAINING&#8221;]</td>
+</tr>
+<tr class="row-odd"><td>max_groups</td>
+<td>Maximum number of groups for each type</td>
+<td>[{&#8220;ALL&#8221;: 4294967040},...]</td>
+</tr>
+<tr class="row-even"><td>actions</td>
+<td>Bitmaps of (1 &lt;&lt; OFPAT_*) values supported</td>
+<td>[{&#8220;ALL&#8221;: [&#8220;OUTPUT&#8221;,...]},...]</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/groupfeatures/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;types&quot;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="s">&quot;capabilities&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">&quot;SELECT_WEIGHT&quot;</span><span class="p">,</span>
+        <span class="s">&quot;SELECT_LIVENESS&quot;</span><span class="p">,</span>
+        <span class="s">&quot;CHAINING&quot;</span>
+      <span class="p">],</span>
+      <span class="s">&quot;max_groups&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s">&quot;ALL&quot;</span><span class="p">:</span> <span class="mi">4294967040</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s">&quot;SELECT&quot;</span><span class="p">:</span> <span class="mi">4294967040</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s">&quot;INDIRECT&quot;</span><span class="p">:</span> <span class="mi">4294967040</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s">&quot;FF&quot;</span><span class="p">:</span> <span class="mi">4294967040</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s">&quot;ALL&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s">&quot;OUTPUT&quot;</span><span class="p">,</span>
+            <span class="s">&quot;COPY_TTL_OUT&quot;</span><span class="p">,</span>
+            <span class="s">&quot;COPY_TTL_IN&quot;</span><span class="p">,</span>
+            <span class="s">&quot;SET_MPLS_TTL&quot;</span><span class="p">,</span>
+            <span class="s">&quot;DEC_MPLS_TTL&quot;</span><span class="p">,</span>
+            <span class="s">&quot;PUSH_VLAN&quot;</span><span class="p">,</span>
+            <span class="s">&quot;POP_VLAN&quot;</span><span class="p">,</span>
+            <span class="s">&quot;PUSH_MPLS&quot;</span><span class="p">,</span>
+            <span class="s">&quot;POP_MPLS&quot;</span><span class="p">,</span>
+            <span class="s">&quot;SET_QUEUE&quot;</span><span class="p">,</span>
+            <span class="s">&quot;GROUP&quot;</span><span class="p">,</span>
+            <span class="s">&quot;SET_NW_TTL&quot;</span><span class="p">,</span>
+            <span class="s">&quot;DEC_NW_TTL&quot;</span><span class="p">,</span>
+            <span class="s">&quot;SET_FIELD&quot;</span>
+          <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s">&quot;SELECT&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s">&quot;INDIRECT&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s">&quot;FF&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-meters-stats">
+<h3>Get meters stats<a class="headerlink" href="#get-meters-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get meters stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/meter/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="68%" />
+<col width="9%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>meter_id</td>
+<td>Meter ID</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>len</td>
+<td>Length in bytes of this stats</td>
+<td>56</td>
+</tr>
+<tr class="row-odd"><td>flow_count</td>
+<td>Number of flows bound to meter</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>packet_in_count</td>
+<td>Number of packets in input</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>byte_in_count</td>
+<td>Number of bytes in input</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>duration_sec</td>
+<td>Time meter has been alive in seconds</td>
+<td>37</td>
+</tr>
+<tr class="row-odd"><td>duration_nsec</td>
+<td>Time meter has been alive in nanoseconds beyond duration_sec</td>
+<td>988000</td>
+</tr>
+<tr class="row-even"><td>band_stats</td>
+<td>struct ofp_meter_band_stats</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>&#8211; packet_band_count</td>
+<td>Number of packets in band</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>&#8211; byte_band_count</td>
+<td>Number of bytes in band</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/meter/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;meter_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;len&quot;</span><span class="p">:</span> <span class="mi">56</span><span class="p">,</span>
+      <span class="s">&quot;flow_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;packet_in_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;byte_in_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;duration_sec&quot;</span><span class="p">:</span> <span class="mi">37</span><span class="p">,</span>
+      <span class="s">&quot;duration_nsec&quot;</span><span class="p">:</span> <span class="mi">988000</span><span class="p">,</span>
+      <span class="s">&quot;band_stats&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s">&quot;packet_band_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="s">&quot;byte_band_count&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-meter-config-stats">
+<span id="id5"></span><h3>Get meter config stats<a class="headerlink" href="#get-meter-config-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get meter config stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/meterconfig/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="66%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>flags</td>
+<td>All OFPMC_* that apply</td>
+<td>&#8220;KBPS&#8221;</td>
+</tr>
+<tr class="row-even"><td>meter_id</td>
+<td>Meter ID</td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td>bands</td>
+<td>struct ofp_meter_band_header</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>&#8211; type</td>
+<td>One of OFPMBT_*</td>
+<td>&#8220;DROP&#8221;</td>
+</tr>
+<tr class="row-odd"><td>&#8211; rate</td>
+<td>Rate for this band</td>
+<td>1000</td>
+</tr>
+<tr class="row-even"><td>&#8211; burst_size</td>
+<td>Size of bursts</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/meterconfig/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;flags&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">&quot;KBPS&quot;</span>
+      <span class="p">],</span>
+      <span class="s">&quot;meter_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;bands&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;DROP&quot;</span><span class="p">,</span>
+          <span class="s">&quot;rate&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+          <span class="s">&quot;burst_size&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-meter-features-stats">
+<h3>Get meter features stats<a class="headerlink" href="#get-meter-features-stats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Get meter features stats of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>GET</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/meterfeatures/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Response message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="52%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID</td>
+<td>&#8220;1&#8221;</td>
+</tr>
+<tr class="row-odd"><td>max_meter</td>
+<td>Maximum number of meters</td>
+<td>256</td>
+</tr>
+<tr class="row-even"><td>band_types</td>
+<td>Bitmaps of (1 &lt;&lt; OFPMBT_*) values supported</td>
+<td>[&#8220;DROP&#8221;]</td>
+</tr>
+<tr class="row-odd"><td>capabilities</td>
+<td>Bitmaps of &#8220;ofp_meter_flags&#8221;</td>
+<td>[&#8220;KBPS&#8221;, &#8220;BURST&#8221;, &#8220;STATS&#8221;]</td>
+</tr>
+<tr class="row-even"><td>max_bands</td>
+<td>Maximum bands per meters</td>
+<td>16</td>
+</tr>
+<tr class="row-odd"><td>max_color</td>
+<td>Maximum color value</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X GET http://localhost:8080/stats/meterfeatures/1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;1&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;max_meter&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+      <span class="s">&quot;band_types&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">&quot;DROP&quot;</span>
+      <span class="p">],</span>
+      <span class="s">&quot;capabilities&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">&quot;KBPS&quot;</span><span class="p">,</span>
+        <span class="s">&quot;BURST&quot;</span><span class="p">,</span>
+        <span class="s">&quot;STATS&quot;</span>
+      <span class="p">],</span>
+      <span class="s">&quot;max_bands&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+      <span class="s">&quot;max_color&quot;</span><span class="p">:</span> <span class="mi">8</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="update-the-switch-stats">
+<h2>Update the switch stats<a class="headerlink" href="#update-the-switch-stats" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="add-a-flow-entry">
+<h3>Add a flow entry<a class="headerlink" href="#add-a-flow-entry" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Add a flow entry to the switch.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/flowentry/add</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="48%" />
+<col width="27%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>cookie</td>
+<td>Opaque controller-issued identifier (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>cookie_mask</td>
+<td>Mask used to restrict the cookie bits (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>table_id</td>
+<td>Table ID to put the flow in (int)</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>idle_timeout</td>
+<td>Idle time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>hard_timeout</td>
+<td>Max time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>priority</td>
+<td>Priority level of flow entry (int)</td>
+<td>11111</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>buffer_id</td>
+<td>Buffered packet to apply to, or OFP_NO_BUFFER (int)</td>
+<td>1</td>
+<td>OFP_NO_BUFFER</td>
+</tr>
+<tr class="row-even"><td>flags</td>
+<td>Bitmap of OFPFF_* flags (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>match</td>
+<td>Fields to match (dict)</td>
+<td>{&#8220;in_port&#8221;:1}</td>
+<td>{} #wildcarded</td>
+</tr>
+<tr class="row-even"><td>actions</td>
+<td>Instruction set (list of dict)</td>
+<td>[{&#8220;type&#8221;:&#8221;OUTPUT&#8221;, &#8220;port&#8221;:2}]</td>
+<td>[] #DROP</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For description of match and actions, please see <a class="reference internal" href="#description-of-match-and-actions"><span>Reference: Description of Match and Actions</span></a>.</p>
+</div>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;cookie&quot;: 1,
+    &quot;cookie_mask&quot;: 1,
+    &quot;table_id&quot;: 0,
+    &quot;idle_timeout&quot;: 30,
+    &quot;hard_timeout&quot;: 30,
+    &quot;priority&quot;: 11111,
+    &quot;flags&quot;: 1,
+    &quot;match&quot;:{
+        &quot;in_port&quot;:1
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;OUTPUT&quot;,
+            &quot;port&quot;: 2
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/add
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;priority&quot;: 22222,
+    &quot;match&quot;:{
+        &quot;in_port&quot;:1
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;GOTO_TABLE&quot;,
+            &quot;table_id&quot;: 1
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/add
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;priority&quot;: 33333,
+    &quot;match&quot;:{
+        &quot;in_port&quot;:1
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;WRITE_METADATA&quot;,
+            &quot;metadata&quot;: 1,
+            &quot;metadata_mask&quot;: 1
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/add
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;priority&quot;: 44444,
+    &quot;match&quot;:{
+        &quot;in_port&quot;:1
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;METER&quot;,
+            &quot;meter_id&quot;: 1
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/add
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To confirm flow entry registration, please see <a class="reference internal" href="#get-all-flows-stats"><span>Get all flows stats</span></a> or <a class="reference internal" href="#get-flows-stats-filtered"><span>Get flows stats filtered by fields</span></a>.</p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="modify-all-matching-flow-entries">
+<h3>Modify all matching flow entries<a class="headerlink" href="#modify-all-matching-flow-entries" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Modify all matching flow entries of the switch.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/flowentry/modify</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="48%" />
+<col width="27%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>cookie</td>
+<td>Opaque controller-issued identifier (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>cookie_mask</td>
+<td>Mask used to restrict the cookie bits (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>table_id</td>
+<td>Table ID to put the flow in (int)</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>idle_timeout</td>
+<td>Idle time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>hard_timeout</td>
+<td>Max time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>priority</td>
+<td>Priority level of flow entry (int)</td>
+<td>11111</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>buffer_id</td>
+<td>Buffered packet to apply to, or OFP_NO_BUFFER (int)</td>
+<td>1</td>
+<td>OFP_NO_BUFFER</td>
+</tr>
+<tr class="row-even"><td>flags</td>
+<td>Bitmap of OFPFF_* flags (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>match</td>
+<td>Fields to match (dict)</td>
+<td>{&#8220;in_port&#8221;:1}</td>
+<td>{} #wildcarded</td>
+</tr>
+<tr class="row-even"><td>actions</td>
+<td>Instruction set (list of dict)</td>
+<td>[{&#8220;type&#8221;:&#8221;OUTPUT&#8221;, &#8220;port&#8221;:2}]</td>
+<td>[] #DROP</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;cookie&quot;: 1,
+    &quot;cookie_mask&quot;: 1,
+    &quot;table_id&quot;: 0,
+    &quot;idle_timeout&quot;: 30,
+    &quot;hard_timeout&quot;: 30,
+    &quot;priority&quot;: 11111,
+    &quot;flags&quot;: 1,
+    &quot;match&quot;:{
+        &quot;in_port&quot;:1
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;OUTPUT&quot;,
+            &quot;port&quot;: 2
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/modify
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="modify-flow-entry-strictly">
+<h3>Modify flow entry strictly<a class="headerlink" href="#modify-flow-entry-strictly" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Modify flow entry strictly matching wildcards and priority</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/flowentry/modify_strict</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="48%" />
+<col width="27%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>cookie</td>
+<td>Opaque controller-issued identifier (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>cookie_mask</td>
+<td>Mask used to restrict the cookie bits (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>table_id</td>
+<td>Table ID to put the flow in (int)</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>idle_timeout</td>
+<td>Idle time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>hard_timeout</td>
+<td>Max time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>priority</td>
+<td>Priority level of flow entry (int)</td>
+<td>11111</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>buffer_id</td>
+<td>Buffered packet to apply to, or OFP_NO_BUFFER (int)</td>
+<td>1</td>
+<td>OFP_NO_BUFFER</td>
+</tr>
+<tr class="row-even"><td>flags</td>
+<td>Bitmap of OFPFF_* flags (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>match</td>
+<td>Fields to match (dict)</td>
+<td>{&#8220;in_port&#8221;:1}</td>
+<td>{} #wildcarded</td>
+</tr>
+<tr class="row-even"><td>actions</td>
+<td>Instruction set (list of dict)</td>
+<td>[{&#8220;type&#8221;:&#8221;OUTPUT&#8221;, &#8220;port&#8221;:2}]</td>
+<td>[] #DROP</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;cookie&quot;: 1,
+    &quot;cookie_mask&quot;: 1,
+    &quot;table_id&quot;: 0,
+    &quot;idle_timeout&quot;: 30,
+    &quot;hard_timeout&quot;: 30,
+    &quot;priority&quot;: 11111,
+    &quot;flags&quot;: 1,
+    &quot;match&quot;:{
+        &quot;in_port&quot;:1
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;OUTPUT&quot;,
+            &quot;port&quot;: 2
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/modify_strict
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="delete-all-matching-flow-entries">
+<h3>Delete all matching flow entries<a class="headerlink" href="#delete-all-matching-flow-entries" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Delete all matching flow entries of the switch.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/flowentry/delete</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="48%" />
+<col width="27%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>cookie</td>
+<td>Opaque controller-issued identifier (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>cookie_mask</td>
+<td>Mask used to restrict the cookie bits (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>table_id</td>
+<td>Table ID to put the flow in (int)</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>idle_timeout</td>
+<td>Idle time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>hard_timeout</td>
+<td>Max time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>priority</td>
+<td>Priority level of flow entry (int)</td>
+<td>11111</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>buffer_id</td>
+<td>Buffered packet to apply to, or OFP_NO_BUFFER (int)</td>
+<td>1</td>
+<td>OFP_NO_BUFFER</td>
+</tr>
+<tr class="row-even"><td>out_port</td>
+<td>Output port (int)</td>
+<td>1</td>
+<td>OFPP_ANY</td>
+</tr>
+<tr class="row-odd"><td>out_group</td>
+<td>Output group (int)</td>
+<td>1</td>
+<td>OFPG_ANY</td>
+</tr>
+<tr class="row-even"><td>flags</td>
+<td>Bitmap of OFPFF_* flags (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>match</td>
+<td>Fields to match (dict)</td>
+<td>{&#8220;in_port&#8221;:1}</td>
+<td>{} #wildcarded</td>
+</tr>
+<tr class="row-even"><td>actions</td>
+<td>Instruction set (list of dict)</td>
+<td>[{&#8220;type&#8221;:&#8221;OUTPUT&#8221;, &#8220;port&#8221;:2}]</td>
+<td>[] #DROP</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;cookie&quot;: 1,
+    &quot;cookie_mask&quot;: 1,
+    &quot;table_id&quot;: 0,
+    &quot;idle_timeout&quot;: 30,
+    &quot;hard_timeout&quot;: 30,
+    &quot;priority&quot;: 11111,
+    &quot;flags&quot;: 1,
+    &quot;match&quot;:{
+        &quot;in_port&quot;:1
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;OUTPUT&quot;,
+            &quot;port&quot;: 2
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/delete
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="delete-flow-entry-strictly">
+<h3>Delete flow entry strictly<a class="headerlink" href="#delete-flow-entry-strictly" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Delete flow entry strictly matching wildcards and priority.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/flowentry/delete_strict</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="48%" />
+<col width="27%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>cookie</td>
+<td>Opaque controller-issued identifier (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>cookie_mask</td>
+<td>Mask used to restrict the cookie bits (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>table_id</td>
+<td>Table ID to put the flow in (int)</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>idle_timeout</td>
+<td>Idle time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>hard_timeout</td>
+<td>Max time before discarding (seconds) (int)</td>
+<td>30</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>priority</td>
+<td>Priority level of flow entry (int)</td>
+<td>11111</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>buffer_id</td>
+<td>Buffered packet to apply to, or OFP_NO_BUFFER (int)</td>
+<td>1</td>
+<td>OFP_NO_BUFFER</td>
+</tr>
+<tr class="row-even"><td>out_port</td>
+<td>Output port (int)</td>
+<td>1</td>
+<td>OFPP_ANY</td>
+</tr>
+<tr class="row-odd"><td>out_group</td>
+<td>Output group (int)</td>
+<td>1</td>
+<td>OFPG_ANY</td>
+</tr>
+<tr class="row-even"><td>flags</td>
+<td>Bitmap of OFPFF_* flags (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>match</td>
+<td>Fields to match (dict)</td>
+<td>{&#8220;in_port&#8221;:1}</td>
+<td>{} #wildcarded</td>
+</tr>
+<tr class="row-even"><td>actions</td>
+<td>Instruction set (list of dict)</td>
+<td>[{&#8220;type&#8221;:&#8221;OUTPUT&#8221;, &#8220;port&#8221;:2}]</td>
+<td>[] #DROP</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;cookie&quot;: 1,
+    &quot;cookie_mask&quot;: 1,
+    &quot;table_id&quot;: 0,
+    &quot;idle_timeout&quot;: 30,
+    &quot;hard_timeout&quot;: 30,
+    &quot;priority&quot;: 11111,
+    &quot;flags&quot;: 1,
+    &quot;match&quot;:{
+        &quot;in_port&quot;:1
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;OUTPUT&quot;,
+            &quot;port&quot;: 2
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/delete_strict
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="delete-all-flow-entries">
+<h3>Delete all flow entries<a class="headerlink" href="#delete-all-flow-entries" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Delete all flow entries of the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>DELETE</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/flowentry/clear/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X DELETE http://localhost:8080/stats/flowentry/clear/1
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="add-a-group-entry">
+<h3>Add a group entry<a class="headerlink" href="#add-a-group-entry" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Add a group entry to the switch.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/groupentry/add</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="50%" />
+<col width="27%" />
+<col width="10%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>One of OFPGT_* (string)</td>
+<td>&#8220;ALL&#8221;</td>
+<td>&#8220;ALL&#8221;</td>
+</tr>
+<tr class="row-even"><td>group_id</td>
+<td>Group ID (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>buckets</td>
+<td>struct ofp_bucket</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>&#8211; weight</td>
+<td>Relative weight of bucket
+(Only defined for select groups)</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>&#8211; watch_port</td>
+<td>Port whose state affects whether this bucket is live
+(Only required for fast failover groups)</td>
+<td>4294967295</td>
+<td>OFPP_ANY</td>
+</tr>
+<tr class="row-even"><td>&#8211; watch_group</td>
+<td>Group whose state affects whether this bucket is live
+(Only required for fast failover groups)</td>
+<td>4294967295</td>
+<td>OFPG_ANY</td>
+</tr>
+<tr class="row-odd"><td>&#8211; actions</td>
+<td>0 or more actions associated with the bucket (list of dict)</td>
+<td>[{&#8220;type&#8221;: &#8220;OUTPUT&#8221;, &#8220;port&#8221;: 1}]</td>
+<td>[] #DROP</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;type&quot;: &quot;ALL&quot;,
+    &quot;group_id&quot;: 1,
+    &quot;buckets&quot;: [
+        {
+            &quot;actions&quot;: [
+                {
+                    &quot;type&quot;: &quot;OUTPUT&quot;,
+                    &quot;port&quot;: 1
+                }
+            ]
+        }
+    ]
+ }&#39; http://localhost:8080/stats/groupentry/add
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To confirm group entry registration, please see <a class="reference internal" href="#get-group-description-stats"><span>Get group description stats</span></a>.</p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="modify-a-group-entry">
+<h3>Modify a group entry<a class="headerlink" href="#modify-a-group-entry" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Modify a group entry to the switch.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/groupentry/modify</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="50%" />
+<col width="27%" />
+<col width="10%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>One of OFPGT_* (string)</td>
+<td>&#8220;ALL&#8221;</td>
+<td>&#8220;ALL&#8221;</td>
+</tr>
+<tr class="row-even"><td>group_id</td>
+<td>Group ID (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>buckets</td>
+<td>struct ofp_bucket</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>&#8211; weight</td>
+<td>Relative weight of bucket
+(Only defined for select groups)</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>&#8211; watch_port</td>
+<td>Port whose state affects whether this bucket is live
+(Only required for fast failover groups)</td>
+<td>4294967295</td>
+<td>OFPP_ANY</td>
+</tr>
+<tr class="row-even"><td>&#8211; watch_group</td>
+<td>Group whose state affects whether this bucket is live
+(Only required for fast failover groups)</td>
+<td>4294967295</td>
+<td>OFPG_ANY</td>
+</tr>
+<tr class="row-odd"><td>&#8211; actions</td>
+<td>0 or more actions associated with the bucket (list of dict)</td>
+<td>[{&#8220;type&#8221;: &#8220;OUTPUT&#8221;, &#8220;port&#8221;: 1}]</td>
+<td>[] #DROP</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;type&quot;: &quot;ALL&quot;,
+    &quot;group_id&quot;: 1,
+    &quot;buckets&quot;: [
+        {
+            &quot;actions&quot;: [
+                {
+                    &quot;type&quot;: &quot;OUTPUT&quot;,
+                    &quot;port&quot;: 1
+                }
+            ]
+        }
+    ]
+ }&#39; http://localhost:8080/stats/groupentry/modify
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="delete-a-group-entry">
+<h3>Delete a group entry<a class="headerlink" href="#delete-a-group-entry" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Delete a group entry to the switch.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/groupentry/delete</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="44%" />
+<col width="15%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>group_id</td>
+<td>Group ID (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;group_id&quot;: 1
+ }&#39; http://localhost:8080/stats/groupentry/delete
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="modify-the-behavior-of-the-port">
+<h3>Modify the behavior of the port<a class="headerlink" href="#modify-the-behavior-of-the-port" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Modify the behavior of the physical port.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/portdesc/modify</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="59%" />
+<col width="11%" />
+<col width="16%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>port_no</td>
+<td>Port number (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>config</td>
+<td>Bitmap of OFPPC_* flags (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>mask</td>
+<td>Bitmap of OFPPC_* flags to be changed (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;port_no&quot;: 1,
+    &quot;config&quot;: 1,
+    &quot;mask&quot;: 1
+    }&#39; http://localhost:8080/stats/portdesc/modify
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To confirm port description, please see <a class="reference internal" href="#get-ports-description"><span>Get ports description</span></a>.</p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="add-a-meter-entry">
+<h3>Add a meter entry<a class="headerlink" href="#add-a-meter-entry" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Add a meter entry to the switch.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/meterentry/add</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="47%" />
+<col width="14%" />
+<col width="18%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>flags</td>
+<td>Bitmap of OFPMF_* flags (list)</td>
+<td>[&#8220;KBPS&#8221;]</td>
+<td>[] #Empty</td>
+</tr>
+<tr class="row-even"><td>meter_id</td>
+<td>Meter ID (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>bands</td>
+<td>struct ofp_meter_band_header</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>&#8211; type</td>
+<td>One of OFPMBT_* (string)</td>
+<td>&#8220;DROP&#8221;</td>
+<td>None</td>
+</tr>
+<tr class="row-odd"><td>&#8211; rate</td>
+<td>Rate for this band (int)</td>
+<td>1000</td>
+<td>None</td>
+</tr>
+<tr class="row-even"><td>&#8211; burst_size</td>
+<td>Size of bursts (int)</td>
+<td>100</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;flags&quot;: &quot;KBPS&quot;,
+    &quot;meter_id&quot;: 1,
+    &quot;bands&quot;: [
+        {
+            &quot;type&quot;: &quot;DROP&quot;,
+            &quot;rate&quot;: 1000
+        }
+    ]
+ }&#39; http://localhost:8080/stats/meterentry/add
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To confirm meter entry registration, please see <a class="reference internal" href="#get-meter-config-stats"><span>Get meter config stats</span></a>.</p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="modify-a-meter-entry">
+<h3>Modify a meter entry<a class="headerlink" href="#modify-a-meter-entry" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Modify a meter entry to the switch.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/meterentry/modify</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="47%" />
+<col width="14%" />
+<col width="18%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>flags</td>
+<td>Bitmap of OFPMF_* flags (list)</td>
+<td>[&#8220;KBPS&#8221;]</td>
+<td>[] #Empty</td>
+</tr>
+<tr class="row-even"><td>meter_id</td>
+<td>Meter ID (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>bands</td>
+<td>struct ofp_meter_band_header</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>&#8211; type</td>
+<td>One of OFPMBT_* (string)</td>
+<td>&#8220;DROP&#8221;</td>
+<td>None</td>
+</tr>
+<tr class="row-odd"><td>&#8211; rate</td>
+<td>Rate for this band (int)</td>
+<td>1000</td>
+<td>None</td>
+</tr>
+<tr class="row-even"><td>&#8211; burst_size</td>
+<td>Size of bursts (int)</td>
+<td>100</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;meter_id&quot;: 1,
+    &quot;flags&quot;: &quot;KBPS&quot;,
+    &quot;bands&quot;: [
+        {
+            &quot;type&quot;: &quot;DROP&quot;,
+            &quot;rate&quot;: 1000
+        }
+    ]
+ }&#39; http://localhost:8080/stats/meterentry/modify
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="delete-a-meter-entry">
+<h3>Delete a meter entry<a class="headerlink" href="#delete-a-meter-entry" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Delete a meter entry to the switch.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/meterentry/delete</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="36%" />
+<col width="18%" />
+<col width="24%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>meter_id</td>
+<td>Meter ID (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;meter_id&quot;: 1
+ }&#39; http://localhost:8080/stats/meterentry/delete
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="support-for-experimenter-multipart">
+<h2>Support for experimenter multipart<a class="headerlink" href="#support-for-experimenter-multipart" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="send-a-experimenter-message">
+<h3>Send a experimenter message<a class="headerlink" href="#send-a-experimenter-message" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Send a experimenter message to the switch which specified with Datapath ID in URI.</p>
+<p>Usage:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="79%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>POST</td>
+</tr>
+<tr class="row-even"><td>URI</td>
+<td>/stats/experimenter/&lt;dpid&gt;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Request message body:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="57%" />
+<col width="10%" />
+<col width="16%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dpid</td>
+<td>Datapath ID (int)</td>
+<td>1</td>
+<td>(Mandatory)</td>
+</tr>
+<tr class="row-odd"><td>experimenter</td>
+<td>Experimenter ID (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td>exp_type</td>
+<td>Experimenter defined (int)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>data_type</td>
+<td>Data format type (&#8220;ascii&#8221; or &#8220;base64&#8221;)</td>
+<td>&#8220;ascii&#8221;</td>
+<td>&#8220;ascii&#8221;</td>
+</tr>
+<tr class="row-even"><td>data</td>
+<td>Data to send (string)</td>
+<td>&#8220;data&#8221;</td>
+<td>&#8220;&#8221; #Empty</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Example of use:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;experimenter&quot;: 1,
+    &quot;exp_type&quot;: 1,
+    &quot;data_type&quot;: &quot;ascii&quot;,
+    &quot;data&quot;: &quot;data&quot;
+    }&#39; http://localhost:8080/stats/experimenter/1
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="reference-description-of-match-and-actions">
+<span id="description-of-match-and-actions"></span><h2>Reference: Description of Match and Actions<a class="headerlink" href="#reference-description-of-match-and-actions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="description-of-match-on-request-messages">
+<h3>Description of Match on request messages<a class="headerlink" href="#description-of-match-on-request-messages" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>List of Match fields (OpenFlow1.0):</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="44%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Match field</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>in_port</td>
+<td>Input switch port (int)</td>
+<td>{&#8220;in_port&#8221;: 7}</td>
+</tr>
+<tr class="row-odd"><td>dl_src</td>
+<td>Ethernet source address (string)</td>
+<td>{&#8220;dl_src&#8221;: &#8220;aa:bb:cc:11:22:33&#8221;}</td>
+</tr>
+<tr class="row-even"><td>dl_dst</td>
+<td>Ethernet destination address (string)</td>
+<td>{&#8220;dl_dst&#8221;: &#8220;aa:bb:cc:11:22:33&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>dl_vlan</td>
+<td>Input VLAN id (int)</td>
+<td>{&#8220;dl_vlan&#8221;: 5}</td>
+</tr>
+<tr class="row-even"><td>dl_vlan_pcp</td>
+<td>Input VLAN priority (int)</td>
+<td>{&#8220;dl_vlan_pcp&#8221;: 3, &#8220;dl_vlan&#8221;: 3}</td>
+</tr>
+<tr class="row-odd"><td>dl_type</td>
+<td>Ethernet frame type (int)</td>
+<td>{&#8220;dl_type&#8221;: 123}</td>
+</tr>
+<tr class="row-even"><td>nw_tos</td>
+<td>IP ToS (int)</td>
+<td>{&#8220;nw_tos&#8221;: 16, &#8220;dl_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>nw_proto</td>
+<td>IP protocol or lower 8 bits of ARP opcode (int)</td>
+<td>{&#8220;nw_proto&#8221;: 5, &#8220;dl_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-even"><td>nw_src</td>
+<td>IPv4 source address (string)</td>
+<td>{&#8220;nw_src&#8221;: &#8220;192.168.0.1&#8221;, &#8220;dl_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>nw_dst</td>
+<td>IPv4 destination address (string)</td>
+<td>{&#8220;nw_dst&#8221;: &#8220;192.168.0.1/24&#8221;, &#8220;dl_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-even"><td>tp_src</td>
+<td>TCP/UDP source port (int)</td>
+<td>{&#8220;tp_src&#8221;: 1, &#8220;nw_proto&#8221;: 6, &#8220;dl_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>tp_dst</td>
+<td>TCP/UDP destination port (int)</td>
+<td>{&#8220;tp_dst&#8221;: 2, &#8220;nw_proto&#8221;: 6, &#8220;dl_type&#8221;: 2048}</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>IPv4 address field can be described as IP Prefix like as follows.</p>
+<p>IPv4 address:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="s">&quot;192.168.0.1&quot;</span>
+<span class="s">&quot;192.168.0.2/24&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>List of Match fields (OpenFlow1.2 or later):</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="30%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Match field</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>in_port</td>
+<td>Switch input port (int)</td>
+<td>{&#8220;in_port&#8221;: 7}</td>
+</tr>
+<tr class="row-odd"><td>in_phy_port</td>
+<td>Switch physical input port (int)</td>
+<td>{&#8220;in_phy_port&#8221;: 5, &#8220;in_port&#8221;: 3}</td>
+</tr>
+<tr class="row-even"><td>metadata</td>
+<td>Metadata passed between tables (string)</td>
+<td>{&#8220;metadata&#8221;: &#8220;0x1212121212121212&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>dl_dst</td>
+<td>Ethernet destination address (string)</td>
+<td>{&#8220;dl_dst&#8221;: &#8220;aa:bb:cc:11:22:33/00:00:00:00:ff:ff&#8221;}</td>
+</tr>
+<tr class="row-even"><td>dl_src</td>
+<td>Ethernet source address (string)</td>
+<td>{&#8220;dl_src&#8221;: &#8220;aa:bb:cc:11:22:33&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>eth_dst</td>
+<td>Ethernet destination address (string)</td>
+<td>{&#8220;eth_dst&#8221;: &#8220;aa:bb:cc:11:22:33/00:00:00:00:ff:ff&#8221;}</td>
+</tr>
+<tr class="row-even"><td>eth_src</td>
+<td>Ethernet source address (string)</td>
+<td>{&#8220;eth_src&#8221;: &#8220;aa:bb:cc:11:22:33&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>dl_type</td>
+<td>Ethernet frame type (int)</td>
+<td>{&#8220;dl_type&#8221;: 123}</td>
+</tr>
+<tr class="row-even"><td>eth_type</td>
+<td>Ethernet frame type (int)</td>
+<td>{&#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>dl_vlan</td>
+<td>VLAN id (int or string)</td>
+<td>See <a class="reference internal" href="#example-of-vlan-id-match-field"><span>Example of VLAN ID match field</span></a></td>
+</tr>
+<tr class="row-even"><td>vlan_vid</td>
+<td>VLAN id (int or string)</td>
+<td>See <a class="reference internal" href="#example-of-vlan-id-match-field"><span>Example of VLAN ID match field</span></a></td>
+</tr>
+<tr class="row-odd"><td>vlan_pcp</td>
+<td>VLAN priority (int)</td>
+<td>{&#8220;vlan_pcp&#8221;: 3, &#8220;vlan_vid&#8221;: 3}</td>
+</tr>
+<tr class="row-even"><td>ip_dscp</td>
+<td>IP DSCP (6 bits in ToS field) (int)</td>
+<td>{&#8220;ip_dscp&#8221;: 3, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>ip_ecn</td>
+<td>IP ECN (2 bits in ToS field) (int)</td>
+<td>{&#8220;ip_ecn&#8221;: 0, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-even"><td>nw_proto</td>
+<td>IP protocol (int)</td>
+<td>{&#8220;nw_proto&#8221;: 5, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>ip_proto</td>
+<td>IP protocol (int)</td>
+<td>{&#8220;ip_proto&#8221;: 5, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-even"><td>tp_src</td>
+<td>Transport layer source port (int)</td>
+<td>{&#8220;tp_src&#8221;: 1, &#8220;ip_proto&#8221;: 6, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>tp_dst</td>
+<td>Transport layer destination port (int)</td>
+<td>{&#8220;tp_dst&#8221;: 2, &#8220;ip_proto&#8221;: 6, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-even"><td>nw_src</td>
+<td>IPv4 source address (string)</td>
+<td>{&#8220;nw_src&#8221;: &#8220;192.168.0.1&#8221;, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>nw_dst</td>
+<td>IPv4 destination address (string)</td>
+<td>{&#8220;nw_dst&#8221;: &#8220;192.168.0.1/24&#8221;, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-even"><td>ipv4_src</td>
+<td>IPv4 source address (string)</td>
+<td>{&#8220;ipv4_src&#8221;: &#8220;192.168.0.1&#8221;, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>ipv4_dst</td>
+<td>IPv4 destination address (string)</td>
+<td>{&#8220;ipv4_dst&#8221;: &#8220;192.168.10.10/255.255.255.0&#8221;, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-even"><td>tcp_src</td>
+<td>TCP source port (int)</td>
+<td>{&#8220;tcp_src&#8221;: 3, &#8220;ip_proto&#8221;: 6, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>tcp_dst</td>
+<td>TCP destination port (int)</td>
+<td>{&#8220;tcp_dst&#8221;: 5, &#8220;ip_proto&#8221;: 6, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-even"><td>udp_src</td>
+<td>UDP source port (int)</td>
+<td>{&#8220;udp_src&#8221;: 2, &#8220;ip_proto&#8221;: 17, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>udp_dst</td>
+<td>UDP destination port (int)</td>
+<td>{&#8220;udp_dst&#8221;: 6, &#8220;ip_proto&#8221;: 17, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-even"><td>sctp_src</td>
+<td>SCTP source port (int)</td>
+<td>{&#8220;sctp_src&#8221;: 99, &#8220;ip_proto&#8221;: 132, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>sctp_dst</td>
+<td>SCTP destination port (int)</td>
+<td>{&#8220;sctp_dst&#8221;: 99, &#8220;ip_proto&#8221;: 132, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-even"><td>icmpv4_type</td>
+<td>ICMP type (int)</td>
+<td>{&#8220;icmpv4_type&#8221;: 5, &#8220;ip_proto&#8221;: 1, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-odd"><td>icmpv4_code</td>
+<td>ICMP code (int)</td>
+<td>{&#8220;icmpv4_code&#8221;: 6, &#8220;ip_proto&#8221;: 1, &#8220;eth_type&#8221;: 2048}</td>
+</tr>
+<tr class="row-even"><td>arp_op</td>
+<td>ARP opcode (int)</td>
+<td>{&#8220;arp_op&#8221;: 3, &#8220;eth_type&#8221;: 2054}</td>
+</tr>
+<tr class="row-odd"><td>arp_spa</td>
+<td>ARP source IPv4 address (string)</td>
+<td>{&#8220;arp_spa&#8221;: &#8220;192.168.0.11&#8221;, &#8220;eth_type&#8221;: 2054}</td>
+</tr>
+<tr class="row-even"><td>arp_tpa</td>
+<td>ARP target IPv4 address (string)</td>
+<td>{&#8220;arp_tpa&#8221;: &#8220;192.168.0.44/24&#8221;, &#8220;eth_type&#8221;: 2054}</td>
+</tr>
+<tr class="row-odd"><td>arp_sha</td>
+<td>ARP source hardware address (string)</td>
+<td>{&#8220;arp_sha&#8221;: &#8220;aa:bb:cc:11:22:33&#8221;, &#8220;eth_type&#8221;: 2054}</td>
+</tr>
+<tr class="row-even"><td>arp_tha</td>
+<td>ARP target hardware address (string)</td>
+<td>{&#8220;arp_tha&#8221;: &#8220;aa:bb:cc:11:22:33/00:00:00:00:ff:ff&#8221;, &#8220;eth_type&#8221;: 2054}</td>
+</tr>
+<tr class="row-odd"><td>ipv6_src</td>
+<td>IPv6 source address (string)</td>
+<td>{&#8220;ipv6_src&#8221;: &#8220;2001::aaaa:bbbb:cccc:1111&#8221;, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-even"><td>ipv6_dst</td>
+<td>IPv6 destination address (string)</td>
+<td>{&#8220;ipv6_dst&#8221;: &#8220;2001::ffff:cccc:bbbb:1111/64&#8221;, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-odd"><td>ipv6_flabel</td>
+<td>IPv6 Flow Label (int)</td>
+<td>{&#8220;ipv6_flabel&#8221;: 2, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-even"><td>icmpv6_type</td>
+<td>ICMPv6 type (int)</td>
+<td>{&#8220;icmpv6_type&#8221;: 3, &#8220;ip_proto&#8221;: 58, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-odd"><td>icmpv6_code</td>
+<td>ICMPv6 code (int)</td>
+<td>{&#8220;icmpv6_code&#8221;: 4, &#8220;ip_proto&#8221;: 58, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-even"><td>ipv6_nd_target</td>
+<td>Target address for Neighbor Discovery (string)</td>
+<td>{&#8220;ipv6_nd_target&#8221;: &#8220;2001::ffff:cccc:bbbb:1111&#8221;, &#8220;icmpv6_type&#8221;: 135, &#8220;ip_proto&#8221;: 58, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-odd"><td>ipv6_nd_sll</td>
+<td>Source link-layer for Neighbor Discovery (string)</td>
+<td>{&#8220;ipv6_nd_sll&#8221;: &#8220;aa:bb:cc:11:22:33&#8221;, &#8220;icmpv6_type&#8221;: 135, &#8220;ip_proto&#8221;: 58, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-even"><td>ipv6_nd_tll</td>
+<td>Target link-layer for Neighbor Discovery (string)</td>
+<td>{&#8220;ipv6_nd_tll&#8221;: &#8220;aa:bb:cc:11:22:33&#8221;, &#8220;icmpv6_type&#8221;: 136, &#8220;ip_proto&#8221;: 58, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+<tr class="row-odd"><td>mpls_label</td>
+<td>MPLS label (int)</td>
+<td>{&#8220;mpls_label&#8221;: 3, &#8220;eth_type&#8221;: 34888}</td>
+</tr>
+<tr class="row-even"><td>mpls_tc</td>
+<td>MPLS Traffic Class (int)</td>
+<td>{&#8220;mpls_tc&#8221;: 2, &#8220;eth_type&#8221;: 34888}</td>
+</tr>
+<tr class="row-odd"><td>mpls_bos</td>
+<td>MPLS BoS bit (int)</td>
+<td>{&#8220;mpls_bos&#8221;: 1, &#8220;eth_type&#8221;: 34888}</td>
+</tr>
+<tr class="row-even"><td>pbb_isid</td>
+<td>PBB I-SID (int)</td>
+<td>{&#8220;pbb_isid&#8221;: 5, &#8220;eth_type&#8221;: 35047}</td>
+</tr>
+<tr class="row-odd"><td>tunnel_id</td>
+<td>Logical Port Metadata (int)</td>
+<td>{&#8220;tunnel_id&#8221;: 7}</td>
+</tr>
+<tr class="row-even"><td>ipv6_exthdr</td>
+<td>IPv6 Extension Header pseudo-field (string)</td>
+<td>{&#8220;ipv6_exthdr&#8221;: &#8220;0x40/0x1F0&#8221;, &#8220;eth_type&#8221;: 34525}</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Some field can be described with mask like as follows.</p>
+<p>Ethernet address:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&quot;aa:bb:cc:11:22:33&quot;</span>
+<span class="s">&quot;aa:bb:cc:11:22:33/00:00:00:00:ff:ff&quot;</span>
+</pre></div>
+</div>
+<p>IPv4 address:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&quot;192.168.0.11&quot;</span>
+<span class="s">&quot;192.168.0.44/24&quot;</span>
+<span class="s">&quot;192.168.10.10/255.255.255.0&quot;</span>
+</pre></div>
+</div>
+<p>IPv6 address:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&quot;2001::ffff:cccc:bbbb:1111&quot;</span>
+<span class="s">&quot;2001::ffff:cccc:bbbb:2222/64&quot;</span>
+<span class="s">&quot;2001::ffff:cccc:bbbb:2222/ffff:ffff:ffff:ffff::0&quot;</span>
+</pre></div>
+</div>
+<p>Metadata:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="s">&quot;0x1212121212121212&quot;</span>
+<span class="s">&quot;0x3434343434343434/0x01010101010101010&quot;</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+<div class="section" id="example-of-vlan-id-match-field">
+<span id="id6"></span><h4>Example of VLAN ID match field<a class="headerlink" href="#example-of-vlan-id-match-field" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><p>The following is available in OpenFlow1.0 or later.</p>
+<ul>
+<li><p class="first">To match only packets with VLAN tag and VLAN ID equal value 5:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;match&quot;:{
+        &quot;dl_vlan&quot;: 5
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;OUTPUT&quot;,
+            &quot;port&quot;: 1
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/add
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When &#8220;dl_vlan&#8221; field is described as decimal int value, OFPVID_PRESENT(0x1000) bit is automatically applied.</p>
+</div>
+<p>The following is available in OpenFlow1.2 or later.</p>
+<ul>
+<li><p class="first">To match only packets without a VLAN tag:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;match&quot;:{
+        &quot;dl_vlan&quot;: &quot;0x0000&quot;   # Describe OFPVID_NONE(0x0000)
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;OUTPUT&quot;,
+            &quot;port&quot;: 1
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/add
+</pre></div>
+</div>
+</li>
+<li><p class="first">To match only packets with a VLAN tag regardless of its value:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;match&quot;:{
+        &quot;dl_vlan&quot;: &quot;0x1000/0x1000&quot;   # Describe OFPVID_PRESENT(0x1000/0x1000)
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;OUTPUT&quot;,
+            &quot;port&quot;: 1
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/add
+</pre></div>
+</div>
+</li>
+<li><p class="first">To match only packets with VLAN tag and VLAN ID equal value 5:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ curl -X POST -d &#39;{
+    &quot;dpid&quot;: 1,
+    &quot;match&quot;:{
+        &quot;dl_vlan&quot;: &quot;0x1005&quot;   # Describe sum of VLAN-ID(e.g. 5) | OFPVID_PRESENT(0x1000)
+    },
+    &quot;actions&quot;:[
+        {
+            &quot;type&quot;:&quot;OUTPUT&quot;,
+            &quot;port&quot;: 1
+        }
+    ]
+ }&#39; http://localhost:8080/stats/flowentry/add
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When using the descriptions for OpenFlow1.2 or later, please describe &#8220;dl_vlan&#8221; field as hexadecimal string value,
+and OFPVID_PRESENT(0x1000) bit is NOT automatically applied.</p>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="description-of-actions-on-request-messages">
+<h3>Description of Actions on request messages<a class="headerlink" href="#description-of-actions-on-request-messages" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>List of Actions (OpenFlow1.0):</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="52%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Actions</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>OUTPUT</td>
+<td>Output packet from &#8220;port&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;OUTPUT&#8221;, &#8220;port&#8221;: 3}</td>
+</tr>
+<tr class="row-odd"><td>SET_VLAN_VID</td>
+<td>Set the 802.1Q VLAN ID using &#8220;vlan_vid&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_VLAN_VID&#8221;, &#8220;vlan_vid&#8221;: 5}</td>
+</tr>
+<tr class="row-even"><td>SET_VLAN_PCP</td>
+<td>Set the 802.1Q priority using &#8220;vlan_pcp&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_VLAN_PCP&#8221;, &#8220;vlan_pcp&#8221;: 3}</td>
+</tr>
+<tr class="row-odd"><td>STRIP_VLAN</td>
+<td>Strip the 802.1Q header</td>
+<td>{&#8220;type&#8221;: &#8220;STRIP_VLAN&#8221;}</td>
+</tr>
+<tr class="row-even"><td>SET_DL_SRC</td>
+<td>Set ethernet source address using &#8220;dl_src&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_DL_SRC&#8221;, &#8220;dl_src&#8221;: &#8220;aa:bb:cc:11:22:33&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>SET_DL_DST</td>
+<td>Set ethernet destination address using &#8220;dl_dst&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_DL_DST&#8221;, &#8220;dl_dst&#8221;: &#8220;aa:bb:cc:11:22:33&#8221;}</td>
+</tr>
+<tr class="row-even"><td>SET_NW_SRC</td>
+<td>IP source address using &#8220;nw_src&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_NW_SRC&#8221;, &#8220;nw_src&#8221;: &#8220;10.0.0.1&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>SET_NW_DST</td>
+<td>IP destination address using &#8220;nw_dst&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_NW_DST&#8221;, &#8220;nw_dst&#8221;: &#8220;10.0.0.1&#8221;}</td>
+</tr>
+<tr class="row-even"><td>SET_NW_TOS</td>
+<td>Set IP ToS (DSCP field, 6 bits) using &#8220;nw_tos&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_NW_TOS&#8221;, &#8220;nw_tos&#8221;: 184}</td>
+</tr>
+<tr class="row-odd"><td>SET_TP_SRC</td>
+<td>Set TCP/UDP source port using &#8220;tp_src&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_TP_SRC&#8221;, &#8220;tp_src&#8221;: 8080}</td>
+</tr>
+<tr class="row-even"><td>SET_TP_DST</td>
+<td>Set TCP/UDP destination port using &#8220;tp_dst&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_TP_DST&#8221;, &#8220;tp_dst&#8221;: 8080}</td>
+</tr>
+<tr class="row-odd"><td>ENQUEUE</td>
+<td>Output to queue with &#8220;queue_id&#8221; attached to &#8220;port&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;ENQUEUE&#8221;, &#8220;queue_id&#8221;: 3, &#8220;port&#8221;: 1}</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>List of Actions (OpenFlow1.2 or later):</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="48%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Actions</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>OUTPUT</td>
+<td>Output packet from &#8220;port&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;OUTPUT&#8221;, &#8220;port&#8221;: 3}</td>
+</tr>
+<tr class="row-odd"><td>COPY_TTL_OUT</td>
+<td>Copy TTL outwards</td>
+<td>{&#8220;type&#8221;: &#8220;COPY_TTL_OUT&#8221;}</td>
+</tr>
+<tr class="row-even"><td>COPY_TTL_IN</td>
+<td>Copy TTL inwards</td>
+<td>{&#8220;type&#8221;: &#8220;COPY_TTL_IN&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>SET_MPLS_TTL</td>
+<td>Set MPLS TTL using &#8220;mpls_ttl&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_MPLS_TTL&#8221;, &#8220;mpls_ttl&#8221;: 64}</td>
+</tr>
+<tr class="row-even"><td>DEC_MPLS_TTL</td>
+<td>Decrement MPLS TTL</td>
+<td>{&#8220;type&#8221;: &#8220;DEC_MPLS_TTL&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>PUSH_VLAN</td>
+<td>Push a new VLAN tag with &#8220;ethertype&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;PUSH_VLAN&#8221;, &#8220;ethertype&#8221;: 33024}</td>
+</tr>
+<tr class="row-even"><td>POP_VLAN</td>
+<td>Pop the outer VLAN tag</td>
+<td>{&#8220;type&#8221;: &#8220;POP_VLAN&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>PUSH_MPLS</td>
+<td>Push a new MPLS tag with &#8220;ethertype&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;PUSH_MPLS&#8221;, &#8220;ethertype&#8221;: 34887}</td>
+</tr>
+<tr class="row-even"><td>POP_MPLS</td>
+<td>Pop the outer MPLS tag with &#8220;ethertype&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;POP_MPLS&#8221;, &#8220;ethertype&#8221;: 2054}</td>
+</tr>
+<tr class="row-odd"><td>SET_QUEUE</td>
+<td>Set queue id using &#8220;queue_id&#8221; when outputting to a port</td>
+<td>{&#8220;type&#8221;: &#8220;SET_QUEUE&#8221;, &#8220;queue_id&#8221;: 7}</td>
+</tr>
+<tr class="row-even"><td>GROUP</td>
+<td>Apply group identified by &#8220;group_id&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;GROUP&#8221;, &#8220;group_id&#8221;: 5}</td>
+</tr>
+<tr class="row-odd"><td>SET_NW_TTL</td>
+<td>Set IP TTL using &#8220;nw_ttl&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;SET_NW_TTL&#8221;, &#8220;nw_ttl&#8221;: 64}</td>
+</tr>
+<tr class="row-even"><td>DEC_NW_TTL</td>
+<td>Decrement IP TTL</td>
+<td>{&#8220;type&#8221;: &#8220;DEC_NW_TTL&#8221;}</td>
+</tr>
+<tr class="row-odd"><td>SET_FIELD</td>
+<td>Set a &#8220;field&#8221; using &#8220;value&#8221;
+(The set of keywords available for &#8220;field&#8221; is the same as match field)</td>
+<td>See <a class="reference internal" href="#example-of-set-field-action"><span>Example of set-field action</span></a></td>
+</tr>
+<tr class="row-even"><td>PUSH_PBB</td>
+<td>Push a new PBB service tag with &#8220;ethertype&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;PUSH_PBB&#8221;, &#8220;ethertype&#8221;: 35047}</td>
+</tr>
+<tr class="row-odd"><td>POP_PBB</td>
+<td>Pop the outer PBB service tag</td>
+<td>{&#8220;type&#8221;: &#8220;POP_PBB&#8221;}</td>
+</tr>
+<tr class="row-even"><td>GOTO_TABLE</td>
+<td>(Instruction) Setup the next table identified by &#8220;table_id&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;GOTO_TABLE&#8221;, &#8220;table_id&#8221;: 8}</td>
+</tr>
+<tr class="row-odd"><td>WRITE_METADATA</td>
+<td>(Instruction) Setup the metadata field using &#8220;metadata&#8221; and &#8220;metadata_mask&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;WRITE_METADATA&#8221;, &#8220;metadata&#8221;: 0x3, &#8220;metadata_mask&#8221;: 0x3}</td>
+</tr>
+<tr class="row-even"><td>METER</td>
+<td>(Instruction) Apply meter identified by &#8220;meter_id&#8221;</td>
+<td>{&#8220;type&#8221;: &#8220;METER&#8221;, &#8220;meter_id&#8221;: 3}</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div></blockquote>
+<div class="section" id="example-of-set-field-action">
+<span id="id7"></span><h4>Example of set-field action<a class="headerlink" href="#example-of-set-field-action" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><p>To set VLAN ID to non-VLAN-tagged frame:</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;actions&quot;:[
+    {
+        &quot;type&quot;: &quot;PUSH_VLAN&quot;,     # Push a new VLAN tag if a input frame is non-VLAN-tagged
+        &quot;ethertype&quot;: 33024       # Ethertype 0x8100(=33024): IEEE 802.1Q VLAN-tagged frame
+    },
+    {
+        &quot;type&quot;: &quot;SET_FIELD&quot;,
+        &quot;field&quot;: &quot;vlan_vid&quot;,     # Set VLAN ID
+        &quot;value&quot;: 4102            # Describe sum of vlan_id(e.g. 6) | OFPVID_PRESENT(0x1000=4096)
+    },
+    {
+        &quot;type&quot;: &quot;OUTPUT&quot;,
+        &quot;port&quot;: 2
+    }
+]
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="ofctl.html">ryu.app.ofctl</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2011-2014 Nippon Telegraph and Telephone Corporation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>
